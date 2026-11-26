@@ -77,7 +77,8 @@ Deno.serve(async (req) => {
 
   // --- Sayt egasi amallari ---
   if (action.startsWith('sa_')) {
-    const asUser = createClient(URL_, Deno.env.get('SUPABASE_ANON_KEY')!, {
+    const anonKey = Deno.env.get('SUPABASE_ANON_KEY') || req.headers.get('apikey') || '';
+    const asUser = createClient(URL_, anonKey, {
       auth: { persistSession: false, autoRefreshToken: false }, global: { headers: { Authorization: 'Bearer ' + jwt } },
     });
     const { data: chk } = await asUser.rpc('sa_check');
