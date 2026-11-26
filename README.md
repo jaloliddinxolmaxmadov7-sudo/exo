@@ -7,3 +7,10 @@ qarzlar, ishchilar hisoboti, admin «Bosh sahifa». Server: Supabase. Telefonga 
 - `manba/` — ilova manbasi, `build.py`, Supabase sxemasi va xodimlar serveri, Paynet serveri.
 
 Birinchi ochilishda: «Birinchi marta? Admin yaratish».
+
+## Android ilova (APK)
+
+- `android/` — saytni ilova ichida ochadigan Android loyiha (kamera-skaner, chek rasmi, yorliq chop etish, zaxira saqlash).
+- Har safar `android/` o'zgarsa, GitHub Actions APK ni yig'adi va `ezome.apk` qilib saytga qo'yadi:
+  https://jaloliddinxolmaxmadov7-sudo.github.io/exo/ezome.apk
+- `android/app/ezome-sideload.jks` — faqat telefonga qo'lda o'rnatish uchun kalit (ochiq). Play Market uchun alohida, maxfiy yuklash kaliti kerak bo'ladi.

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Ez" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">#1f6bff</item>
+        <item name="android:navigationBarColor">#f2f3ef</item>
+        <item name="android:windowBackground">@color/bg</item>
+    </style>
+    <color name="bg">#f2f3ef</color>
+</resources>

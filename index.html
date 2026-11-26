@@ -1041,7 +1041,7 @@ function open(id){$('#'+id).classList.add('on')}
 function close(id){$('#'+id).classList.remove('on');if(id==='sc'&&typeof SC!=='undefined'&&SC)scanStop()}
 document.addEventListener('click',e=>{const c=e.target.closest('[data-close]');if(c)close(c.dataset.close);if(e.target.classList.contains('ov'))close(e.target.id);const g=e.target.closest('[data-go]');if(g)location.hash=g.dataset.go});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(SC&&!$('#szp').classList.contains('on')){scanStop();return}$$('.ov.on').forEach(o=>close(o.id))}});
-async function download(filename,data){try{const d=await window.claude?.use?.('downloads');if(!d){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:/\.json$/.test(filename)?'application/json':/\.csv$/.test(filename)?'text/csv;charset=utf-8':'text/html;charset=utf-8'}));a.download=filename;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000);return}await d.save({filename,data})}catch(e){toast("Yuklab olinmadi")}}
+async function download(filename,data){try{if(window.EzAndroid){const r=window.EzAndroid.save(filename,String(data));toast(r?'Saqlandi: '+r:'Saqlanmadi');return}const d=await window.claude?.use?.('downloads');if(!d){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:/\.json$/.test(filename)?'application/json':/\.csv$/.test(filename)?'text/csv;charset=utf-8':'text/html;charset=utf-8'}));a.download=filename;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000);return}await d.save({filename,data})}catch(e){toast("Yuklab olinmadi")}}
 
 const ROUTES=['bosh','hisobotim','katalog','kassa','sotuvlar','hisobot','qarz','tarix','statistika','sozlamalar'],ADM=['bosh','sotuvlar','hisobot','qarz','tarix','statistika','sozlamalar'];
 function route(){const h=location.hash.slice(1);if(ADM.includes(h)&&!isAdmin()&&S.role){location.hash='hisobotim';return}if(h==='hisobotim'&&isAdmin()){location.hash='hisobot';return}const def=!S.role?'katalog':isAdmin()?'bosh':'hisobotim';S.route=ROUTES.includes(h)&&(isAdmin()||!ADM.includes(h))&&!(h==='hisobotim'&&isAdmin())?h:def;if(S.route!=='bosh')S.bSeen=null;ROUTES.forEach(r=>$('#v-'+r).hidden=r!==S.route);$$('.nav').forEach(n=>n.classList.toggle('on',n.dataset.go===S.route));render();window.scrollTo(0,0)}
@@ -1189,6 +1189,7 @@ function openLabels(id,only,fresh){lbItems=labelList(id,only);if(!lbItems.length
   $('#lbList').innerHTML=lbItems.map(x=>`<div class="lbit"><div class="lbl">${labelInner(x)}</div><b>${x.size?esc(x.size)+' · ':''}${fmt(x.copies)} ta</b></div>`).join('');$('#lbPrint').textContent=`Chop etish (${n} ta)`;open('lb')}
 function printLabels(list){const html=labelsHTML(list);const name='yorliq-'+((list[0]&&list[0].sku)||'tovar')+'-30x20.html';
   if(window.claude&&window.claude.use){download(name,html);return}
+  if(window.EzAndroid){window.EzAndroid.printHtml(html,name);return}
   const w=window.open('','_blank');if(w){w.document.open();w.document.write(html);w.document.close()}else download(name,html)}
 $('#lbPrint').onclick=()=>{if(!lbItems.length)return;printLabels(lbItems);close('lb')};
 /* Korzinka uslubidagi kamera skaneri */
