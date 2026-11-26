@@ -7,4 +7,9 @@ window.EZ_SUPA = {
 // Paynet avtomatik to'lovi (server kerak). Ulanmaguncha false.
 window.EZ_PAYNET_AUTO = false;
 // "Adminlarga bog'laning" yozuvida chiqadigan aloqa (telefon yoki Telegram)
-window.EZ_SUPPORT = '';
+window.EZ_SUPPORT = 'Telegram: @perdeloto';
+// Tariflar narxi — saytda shunday ko'rinadi. Bo'sh qoldirilsa: "Narxi — Telegramda".
+window.EZ_PLANS = {
+  pro: { price: '' },      // masalan: '99 000 so\'m / oy'
+  premium: { price: '' }   // masalan: '199 000 so\'m / oy'
+};
