@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="light dark">
+<title>ezome · boshqaruv</title>
+<link rel="icon" href="../icons/favicon-32.png">
+<style>
+:root{--bg:light-dark(#f2f3ef,#0d0f13);--card:light-dark(#fff,#171a21);--ink:light-dark(#111318,#eef0f4);--mute:light-dark(#6b7078,#9aa1ad);--line:light-dark(#e7e8e3,#262a33);--soft:light-dark(#f1f2ee,#20242c);--blue:#1f6bff;--red:light-dark(#d93a1f,#ff7a5e);--green:light-dark(#0f7d54,#4fd39b);--amber:light-dark(#a15c00,#f5b14c);--r:18px;color-scheme:light dark}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+.hide{display:none!important}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:20px;letter-spacing:-.02em}.logo i{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:var(--blue);color:#fff;font-style:normal}
+.btn{border:0;border-radius:12px;min-height:42px;padding:0 16px;font-weight:600;cursor:pointer;background:var(--soft);display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none}
+.btn.pri{background:var(--blue);color:#fff}.btn.red{background:color-mix(in srgb,var(--red) 15%,transparent);color:var(--red)}.btn.sm{min-height:34px;padding:0 12px;font-size:14px}
+.btn:disabled{opacity:.55;cursor:wait}.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.f{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}.f label{font-size:13px;color:var(--mute);font-weight:600}
+.f input,.f select,.f textarea{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 12px;min-height:44px;width:100%}
+.err{color:var(--red);min-height:20px;font-size:14px}.mu{color:var(--mute)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+/* kirish */
+.auth{min-height:100vh;display:grid;place-items:center;padding:20px}.auth .card{width:min(420px,100%)}.auth h1{font-size:22px;margin:16px 0 4px}.auth p{margin:0 0 16px}
+.qr{display:grid;place-items:center;background:#fff;border-radius:14px;padding:10px;margin:0 auto 10px;width:max-content}.qr img{width:190px;height:190px}
+.secret{font-family:ui-monospace,monospace;font-size:13px;word-break:break-all;background:var(--soft);padding:8px 10px;border-radius:10px;margin-bottom:12px;user-select:all}
+.code{letter-spacing:.4em;text-align:center;font-size:22px!important;font-weight:700}
+/* panel */
+.top{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1240px;margin:0 auto;padding:12px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;flex:1}.tab{border:0;background:none;padding:8px 14px;border-radius:10px;font-weight:600;color:var(--mute);cursor:pointer}.tab.on{background:var(--card);color:var(--ink);box-shadow:0 1px 0 var(--line)}
+main{max-width:1240px;margin:0 auto;padding:18px 16px 60px}
+h2{font-size:20px;margin:0 0 12px}h3{margin:0 0 10px;font-size:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:14px}
+.stat .n{font-size:28px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}.stat .l{color:var(--mute);font-size:13px;font-weight:600}.stat .s{font-size:13px;color:var(--mute);margin-top:2px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px;margin-bottom:14px}
+.bar{height:10px;border-radius:99px;background:var(--soft);overflow:hidden;margin:6px 0 4px}.bar i{display:block;height:100%;background:var(--blue);border-radius:99px}.bar i.warn{background:var(--amber)}.bar i.bad{background:var(--red)}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.chip{border:1px solid var(--line);background:var(--card);border-radius:99px;padding:6px 12px;cursor:pointer;font-weight:600;font-size:14px}.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;align-items:center}.tools input{flex:1 1 240px;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 12px;min-height:44px}
+.tbl{width:100%;border-collapse:collapse;background:var(--card);border-radius:var(--r);overflow:hidden;border:1px solid var(--line)}
+.tbl th{text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mute);padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}.tbl tr:last-child td{border-bottom:0}
+.tbl small{color:var(--mute);display:block}.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.wrap{overflow-x:auto;border-radius:var(--r)}
+.pl{display:inline-block;border-radius:99px;padding:2px 10px;font-weight:700;font-size:13px;white-space:nowrap}
+.pl.free{background:var(--soft);color:var(--mute)}.pl.pro{background:color-mix(in srgb,var(--blue) 15%,transparent);color:var(--blue)}.pl.premium{background:color-mix(in srgb,#8b3dff 16%,transparent);color:light-dark(#6a1fe0,#b88cff)}.pl.lifetime{background:color-mix(in srgb,var(--green) 16%,transparent);color:var(--green)}
+.tag{font-size:12px;font-weight:700;border-radius:6px;padding:1px 6px;margin-left:4px}.tag.bad{background:color-mix(in srgb,var(--red) 15%,transparent);color:var(--red)}.tag.warn{background:color-mix(in srgb,var(--amber) 18%,transparent);color:var(--amber)}
+.empty{padding:28px;text-align:center;color:var(--mute)}
+dialog{border:0;border-radius:var(--r);padding:0;width:min(560px,calc(100vw - 24px));background:var(--card);color:var(--ink);max-height:calc(100vh - 24px)}
+dialog::backdrop{background:rgba(8,10,14,.55)}
+.dh{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--card)}.dh h3{margin:0}
+.db{padding:16px 18px}.df{display:flex;gap:8px;justify-content:flex-end;padding:12px 18px;border-top:1px solid var(--line);flex-wrap:wrap}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}.seg label{border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center;cursor:pointer;font-weight:600;font-size:14px}.seg input{position:absolute;opacity:0;pointer-events:none}.seg label:has(input:checked){border-color:var(--blue);background:color-mix(in srgb,var(--blue) 10%,transparent);color:var(--blue)}
+.months{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin-bottom:14px;font-size:14px}.kv dt{color:var(--mute)}.kv dd{margin:0}
+.sep{height:1px;background:var(--line);margin:14px 0}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#111318;color:#fff;padding:12px 18px;border-radius:14px;opacity:0;pointer-events:none;transition:.2s;z-index:99;max-width:calc(100vw - 32px)}.toast.on{opacity:1}
+@media (max-width:720px){.hide-sm{display:none}.seg{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<!-- 1. Parol -->
+<section class="auth" id="sLogin">
+  <form class="card" id="fLogin" autocomplete="on">
+    <div class="logo"><i>e</i>ezome</div>
+    <h1>Boshqaruv</h1><p class="mu">Sayt egasi uchun</p>
+    <div class="f"><label for="em">Email</label><input id="em" type="email" autocomplete="username" required></div>
+    <div class="f"><label for="pw">Parol</label><input id="pw" type="password" autocomplete="current-password" required></div>
+    <div class="err" id="eLogin" role="alert"></div>
+    <button class="btn pri" style="width:100%">Kirish</button>
+  </form>
+</section>
+
+<!-- 2. Ikkinchi bosqich (TOTP) -->
+<section class="auth hide" id="sMfa">
+  <form class="card" id="fMfa" autocomplete="off">
+    <div class="logo"><i>e</i>ezome</div>
+    <h1 id="mfaH">Tasdiqlash kodi</h1>
+    <p class="mu" id="mfaP">Telefoningizdagi autentifikator ilovasidagi 6 xonali kodni kiriting.</p>
+    <div id="mfaEnroll" class="hide">
+      <div class="qr"><img id="mfaQr" alt="QR kod"></div>
+      <div class="mu" style="font-size:13px;margin-bottom:4px">QR o'qilmasa, shu kalitni qo'lda kiriting:</div>
+      <div class="secret" id="mfaSecret"></div>
+    </div>
+    <div class="f"><label for="otp">6 xonali kod</label><input id="otp" class="code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required></div>
+    <div class="err" id="eMfa" role="alert"></div>
+    <button class="btn pri" style="width:100%">Tasdiqlash</button>
+    <button class="btn" type="button" id="mfaBack" style="width:100%;margin-top:8px">Chiqish</button>
+  </form>
+</section>
+
+<!-- 3. Panel -->
+<div id="sApp" class="hide">
+  <header class="top"><div class="top-in">
+    <div class="logo"><i>e</i>ezome</div>
+    <nav class="tabs" role="tablist">
+      <button class="tab on" data-t="umumiy">Umumiy</button>
+      <button class="tab" data-t="dokonlar">Do'konlar</button>
+      <button class="tab" data-t="odamlar">Foydalanuvchilar</button>
+      <button class="tab" data-t="jurnal">Jurnal</button>
+    </nav>
+    <button class="btn pri sm" id="bNew">+ Yangi do'kon</button>
+    <button class="btn sm" id="bRefresh" title="Yangilash">↻</button>
+    <button class="btn sm" id="bOut">Chiqish</button>
+  </div></header>
+  <main>
+    <section id="t-umumiy"></section>
+    <section id="t-dokonlar" class="hide">
+      <div class="tools"><input id="qShop" type="search" placeholder="Qidirish: do'kon, egasi, telefon, shahar, login"></div>
+      <div class="chips" id="fShop"></div>
+      <div class="wrap"><table class="tbl" id="tShops"></table></div>
+    </section>
+    <section id="t-odamlar" class="hide">
+      <div class="tools"><input id="qUser" type="search" placeholder="Qidirish: ism, login, do'kon"></div>
+      <div class="wrap"><table class="tbl" id="tUsers"></table></div>
+    </section>
+    <section id="t-jurnal" class="hide"><div class="wrap"><table class="tbl" id="tAudit"></table></div></section>
+  </main>
+</div>
+
+<!-- Do'kon oynasi -->
+<dialog id="dShop">
+  <div class="dh"><h3 id="dsH">Do'kon</h3><button class="btn sm" data-close>Yopish</button></div>
+  <div class="db">
+    <dl class="kv" id="dsInfo"></dl>
+    <h3>Tarif</h3>
+    <div class="seg" id="dsPlan">
+      <label><input type="radio" name="pl" value="free">Free</label>
+      <label><input type="radio" name="pl" value="pro">Pro</label>
+      <label><input type="radio" name="pl" value="premium">Premium</label>
+      <label><input type="radio" name="pl" value="lifetime">Butun umrlik</label>
+    </div>
+    <div id="dsTerm">
+      <div class="mu" style="font-size:13px;margin-bottom:6px" id="dsTermHint">Necha oyga (hozirgi muddat tugamagan bo'lsa — davomiga qo'shiladi):</div>
+      <div class="months" id="dsMonths"></div>
+      <div class="f"><label for="dsUntil">yoki aniq tugash sanasi</label><input type="date" id="dsUntil"></div>
+    </div>
+    <button class="btn pri" id="dsSavePlan" style="width:100%">Tarifni saqlash</button>
+    <div class="sep"></div>
+    <h3>Ma'lumotlar</h3>
+    <div class="f"><label for="dsName">Do'kon nomi</label><input id="dsName" maxlength="80"></div>
+    <div class="f"><label for="dsOwner">Egasi</label><input id="dsOwner" maxlength="60"></div>
+    <div class="f"><label for="dsPhone">Telefon</label><input id="dsPhone" maxlength="40"></div>
+    <div class="f"><label for="dsCity">Shahar</label><input id="dsCity" maxlength="60"></div>
+    <div class="f"><label for="dsNote">Izoh (faqat sizga ko'rinadi)</label><textarea id="dsNote" rows="2" maxlength="1000"></textarea></div>
+    <button class="btn" id="dsSaveInfo" style="width:100%">Ma'lumotlarni saqlash</button>
+    <div class="sep"></div>
+    <h3>Adminlar</h3>
+    <div id="dsAdmins"></div>
+  </div>
+  <div class="df"><button class="btn red" id="dsBlock">Bloklash</button></div>
+</dialog>
+
+<!-- Yangi do'kon -->
+<dialog id="dNew">
+  <form method="dialog" id="fNew">
+    <div class="dh"><h3>Yangi do'kon va admin</h3><button class="btn sm" type="button" data-close>Yopish</button></div>
+    <div class="db">
+      <div class="f"><label for="nShop">Do'kon nomi</label><input id="nShop" maxlength="60" required></div>
+      <div class="f"><label for="nName">Egasining ismi</label><input id="nName" maxlength="40" required></div>
+      <div class="f"><label for="nPhone">Telefon</label><input id="nPhone" maxlength="30" inputmode="tel" placeholder="+998"></div>
+      <div class="f"><label for="nCity">Shahar</label><input id="nCity" maxlength="40"></div>
+      <div class="f"><label for="nLogin">Admin logini</label><input id="nLogin" maxlength="30" autocapitalize="none" spellcheck="false" required></div>
+      <div class="f"><label for="nCode">Admin kodi (kamida 6 belgi)</label><div style="display:flex;gap:6px"><input id="nCode" maxlength="40" required style="flex:1"><button class="btn" type="button" id="nGen">Yaratish</button></div></div>
+      <h3>Tarif</h3>
+      <div class="seg" id="nPlan">
+        <label><input type="radio" name="np" value="free">Free</label>
+        <label><input type="radio" name="np" value="pro" checked>Pro</label>
+        <label><input type="radio" name="np" value="premium">Premium</label>
+        <label><input type="radio" name="np" value="lifetime">Butun umrlik</label>
+      </div>
+      <div class="f" id="nMonthsBox"><label for="nMonths">Necha oyga</label><select id="nMonths"><option>1</option><option>3</option><option>6</option><option selected>12</option></select></div>
+      <div class="err" id="eNew" role="alert"></div>
+    </div>
+    <div class="df"><button class="btn pri" id="nSave" value="x">Yaratish</button></div>
+  </form>
+</dialog>
+
+<!-- Kod almashtirish -->
+<dialog id="dCode">
+  <form method="dialog" id="fCode">
+    <div class="dh"><h3 id="dcH">Yangi kod</h3><button class="btn sm" type="button" data-close>Yopish</button></div>
+    <div class="db">
+      <p class="mu" id="dcP" style="margin-top:0"></p>
+      <div class="f"><label for="dcCode">Yangi kod</label><div style="display:flex;gap:6px"><input id="dcCode" maxlength="40" required style="flex:1"><button class="btn" type="button" id="dcGen">Yaratish</button></div></div>
+      <div class="err" id="eCode" role="alert"></div>
+    </div>
+    <div class="df"><button class="btn pri" value="x">Saqlash</button></div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="../vendor/supabase.js"></script>
+<script src="../config.js"></script>
+<script>
+'use strict';
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const C=window.EZ_SUPA||{};const REF=(String(C.url).match(/https:\/\/([a-z0-9]+)\.supabase\.co/)||[])[1]||'';
+const PL={free:'Free',pro:'Pro',premium:'Premium',lifetime:'Butun umrlik'};
+const sb=supabase.createClient(C.url,C.key,{auth:{storageKey:'ezome-ega',storage:window.sessionStorage,persistSession:true,autoRefreshToken:true}});
+const D={shops:[],users:[],audit:[],ov:null,filter:'all',cur:null};
+let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),3000)}
+const pad=n=>String(n).padStart(2,'0');
+const dt=v=>{if(!v)return '—';const d=new Date(v);return isNaN(d)?'—':`${pad(d.getDate())}.${pad(d.getMonth()+1)}.${d.getFullYear()}`};
+const dtm=v=>{if(!v)return '—';const d=new Date(v);return isNaN(d)?'—':`${dt(d)} ${pad(d.getHours())}:${pad(d.getMinutes())}`};
+const ago=v=>{if(!v)return '—';const s=(Date.now()-new Date(v))/1e3;if(s<3600)return Math.max(1,Math.round(s/60))+' daq oldin';if(s<86400)return Math.round(s/3600)+' soat oldin';return Math.round(s/86400)+' kun oldin'};
+const bytes=n=>{n=+n||0;if(n<1024)return n+' B';const u=['KB','MB','GB','TB'];let i=-1;do{n/=1024;i++}while(n>=1024&&i<3);return n.toFixed(n<10?1:0)+' '+u[i]};
+const days=v=>v?Math.ceil((new Date(v)-Date.now())/864e5):null;
+const genCode=()=>{const a='abcdefghjkmnpqrstuvwxyz23456789';const r=crypto.getRandomValues(new Uint32Array(8));return [...r].map(x=>a[x%a.length]).join('')};
+async function rpc(n,a){const {data,error}=await sb.rpc(n,a);if(error)throw new Error(/Ruxsat|42501/.test(error.message)?"Ruxsat yo'q — qayta kiring":error.message);return data}
+async function fn(body){const s=(await sb.auth.getSession()).data.session;if(!s)throw new Error('Qayta kiring');
+  let r;try{r=await fetch(C.url+'/functions/v1/staff',{method:'POST',headers:{'Content-Type':'application/json',apikey:C.key,Authorization:'Bearer '+s.access_token},body:JSON.stringify(body)})}catch(e){throw new Error("Internet yo'q")}
+  const j=await r.json().catch(()=>({}));if(!r.ok||j.error)throw new Error(j.error||'Server xatosi '+r.status);return j}
+function show(id){['sLogin','sMfa','sApp'].forEach(x=>$('#'+x).classList.toggle('hide',x!==id))}
+async function busy(btn,f){btn.disabled=true;try{return await f()}finally{btn.disabled=false}}
+
+/* ---------- Kirish: parol → TOTP → ro'yxat tekshiruvi ---------- */
+let factorId=null,enrolling=false;
+// Supabase QR'ni "data:image/svg+xml;utf-8,<svg…>" ko'rinishida beradi — har bir brauzer o'qishi uchun qayta kodlaymiz
+const qrSrc=q=>{q=String(q||'');const i=q.indexOf('<');return /^data:image\/svg\+xml/.test(q)&&i>0?'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(q.slice(i)):q};
+$('#fLogin').onsubmit=async e=>{e.preventDefault();const err=$('#eLogin');err.textContent='';
+  await busy(e.submitter||$('#fLogin button'),async()=>{const {error}=await sb.auth.signInWithPassword({email:$('#em').value.trim(),password:$('#pw').value});
+    if(error){err.textContent=/rate|too many/i.test(error.message)?"Juda ko'p urinish — keyinroq":/fetch|network/i.test(error.message)?"Internet yo'q":"Email yoki parol noto'g'ri";return}
+    $('#pw').value='';await afterPassword()})};
+async function afterPassword(){
+  const {data:lv}=await sb.auth.mfa.getAuthenticatorAssuranceLevel();
+  if(lv&&lv.currentLevel==='aal2')return enter();
+  const {data:fs,error}=await sb.auth.mfa.listFactors();if(error){$('#eLogin').textContent=error.message;return}
+  const ok=(fs.totp||[]).find(f=>f.status==='verified');
+  $('#otp').value='';$('#eMfa').textContent='';
+  if(ok){factorId=ok.id;enrolling=false;$('#mfaEnroll').classList.add('hide');$('#mfaH').textContent='Tasdiqlash kodi';$('#mfaP').textContent="Telefoningizdagi autentifikator ilovasidagi 6 xonali kodni kiriting.";show('sMfa');$('#otp').focus();return}
+  for(const f of (fs.all||[]).filter(f=>f.status!=='verified'))await sb.auth.mfa.unenroll({factorId:f.id});
+  const {data:en,error:e2}=await sb.auth.mfa.enroll({factorType:'totp',friendlyName:'ezome-ega-'+Date.now().toString(36)});
+  if(e2){$('#eLogin').textContent="2-bosqichli himoyani yoqib bo'lmadi: "+e2.message+" (Supabase → Authentication → MFA → TOTP yoqilganini tekshiring)";await sb.auth.signOut();return}
+  factorId=en.id;enrolling=true;$('#mfaQr').src=qrSrc(en.totp.qr_code);$('#mfaSecret').textContent=en.totp.secret;$('#mfaEnroll').classList.remove('hide');
+  $('#mfaH').textContent='Himoyani yoqing (bir marta)';$('#mfaP').textContent="Telefoningizga Google Authenticator yoki shunga o'xshash ilova o'rnating, QR kodni skanerlang va chiqqan 6 xonali kodni kiriting. Bundan keyin har kirishda shu kod so'raladi.";
+  show('sMfa');$('#otp').focus()}
+$('#fMfa').onsubmit=async e=>{e.preventDefault();const err=$('#eMfa');err.textContent='';const code=$('#otp').value.replace(/\D/g,'');
+  if(code.length!==6){err.textContent='6 ta raqam kiriting';return}
+  await busy($('#fMfa button.pri'),async()=>{const {error}=await sb.auth.mfa.challengeAndVerify({factorId,code});
+    if(error){err.textContent=/invalid|expired/i.test(error.message)?"Kod noto'g'ri yoki eskirgan":error.message;$('#otp').value='';return}
+    if(enrolling)toast('2-bosqichli himoya yoqildi ✓');await enter()})};
+$('#mfaBack').onclick=()=>logout();
+async function enter(){let c;try{c=await rpc('sa_check')}catch(e){$('#eLogin').textContent=e.message;show('sLogin');return}
+  if(!c||!c.super){await sb.auth.signOut();show('sLogin');$('#eLogin').textContent="Bu hisobga ruxsat yo'q.";return}
+  if(!c.aal2)return afterPassword();
+  show('sApp');idle();await loadAll()}
+async function logout(){try{await sb.auth.signOut()}catch(e){}D.shops=[];D.users=[];D.audit=[];D.ov=null;$('#t-umumiy').innerHTML='';show('sLogin');$('#em').focus()}
+$('#bOut').onclick=logout;
+// 30 daqiqa harakatsiz qolsa — avtomatik chiqish
+let idleT;function idle(){clearTimeout(idleT);idleT=setTimeout(()=>{if(!$('#sApp').classList.contains('hide')){logout();setTimeout(()=>$('#eLogin').textContent='30 daqiqa harakat bo\'lmagani uchun chiqildi',50)}},30*60e3)}
+['click','keydown','pointermove'].forEach(ev=>addEventListener(ev,()=>{if(!$('#sApp').classList.contains('hide'))idle()},{passive:true}));
+
+/* ---------- Ma'lumot yuklash ---------- */
+async function loadAll(){try{const [ov,shops,users,audit]=await Promise.all([rpc('sa_overview'),rpc('sa_shops'),rpc('sa_users'),rpc('sa_audit_list')]);
+  Object.assign(D,{ov,shops,users,audit});renderAll()}catch(e){toast(e.message);if(/Ruxsat/.test(e.message))logout()}}
+$('#bRefresh').onclick=()=>busy($('#bRefresh'),loadAll);
+function renderAll(){rOverview();rShops();rUsers();rAudit()}
+
+/* ---------- Tablar ---------- */
+$$('.tab').forEach(b=>b.onclick=()=>{$$('.tab').forEach(x=>x.classList.toggle('on',x===b));$$('main>section').forEach(s=>s.classList.toggle('hide',s.id!=='t-'+b.dataset.t))});
+function goTab(t){$(`.tab[data-t="${t}"]`).click()}
+
+/* ---------- Umumiy ---------- */
+function rOverview(){const o=D.ov;if(!o)return;const P=o.plans||{};
+  const DBL=500*1024*1024,STL=1024*1024*1024,pct=(a,b)=>Math.min(100,a/b*100),cls=p=>p>90?'bad':p>70?'warn':'';
+  const dbp=pct(o.db_bytes,DBL),stp=pct(o.storage_bytes,STL);
+  const soon=D.shops.filter(s=>['pro','premium'].includes(s.plan)&&s.plan_until).map(s=>({...s,d:days(s.plan_until)})).filter(s=>s.d<=7).sort((a,b)=>a.d-b.d);
+  const big=[...D.shops].sort((a,b)=>(b.data_bytes+b.img_bytes)-(a.data_bytes+a.img_bytes)).slice(0,8);
+  $('#t-umumiy').innerHTML=`
+  <div class="grid">
+    ${stat("Do'konlar",o.shops,`${o.shops_ok} tasi faol tarifda`,'dokonlar','all')}
+    ${stat('Foydalanuvchilar',o.users,`${o.users_active} faol · ${o.signin_24h} kishi 24 soatda kirdi`,'odamlar')}
+    ${stat("Yangi ro'yxatdan o'tganlar",o.new_7d,`7 kunda · 30 kunda: ${o.new_30d}`,'dokonlar','new')}
+    ${stat('24 soatda ishlagan',o.active_24h,"do'kon ma'lumot kiritgan")}
+    ${stat('7 kunda tugaydi',o.expiring_7d,"Pro/Premium to'lovi",'dokonlar','soon')}
+    ${stat('Muddati tugagan',o.expired,'qayta to\'lamagan','dokonlar','expired')}
+  </div>
+  <div class="two">
+    <div class="card"><h3>Tariflar</h3>
+      ${['free','pro','premium','lifetime'].map(k=>`<div class="row" style="padding:6px 0"><span class="pl ${k}">${PL[k]}</span><b class="num">${P[k]||0}</b></div>`).join('')}
+      ${o.blocked?`<div class="row" style="padding:6px 0"><span>Bloklangan</span><b class="num">${o.blocked}</b></div>`:''}
+    </div>
+    <div class="card"><h3>Xotira va trafik</h3>
+      <div class="row"><span>Ma'lumotlar bazasi</span><b class="num">${bytes(o.db_bytes)} / 500 MB</b></div><div class="bar"><i class="${cls(dbp)}" style="width:${dbp.toFixed(1)}%"></i></div>
+      <div class="mu" style="font-size:13px;margin-bottom:10px">Do'konlar yozuvlari: ${bytes(o.docs_bytes)} · ${o.docs_rows.toLocaleString('ru-RU')} ta yozuv</div>
+      <div class="row"><span>Rasmlar (Storage)</span><b class="num">${bytes(o.storage_bytes)} / 1 GB</b></div><div class="bar"><i class="${cls(stp)}" style="width:${stp.toFixed(1)}%"></i></div>
+      <div class="mu" style="font-size:13px;margin-bottom:10px">${o.storage_files} ta fayl</div>
+      <div class="row"><span>Trafik (yuklab olish, GB)</span><a class="btn sm" href="https://supabase.com/dashboard/project/${esc(REF)}" target="_blank" rel="noopener noreferrer">Supabase'da ko'rish ↗</a></div>
+      <div class="mu" style="font-size:13px">Bepul tarifda oyiga 5 GB. Aniq trafikni faqat Supabase o'zi ko'rsatadi: loyiha → Usage. Chegaralar Supabase bepul tarifi bo'yicha.</div>
+    </div>
+  </div>
+  <div class="two">
+    <div class="card"><h3>To'lovi tugayotganlar</h3>${soon.length?`<table class="tbl" style="border:0">${soon.map(s=>`<tr><td><b>${esc(s.name)}</b><small>${esc(s.owner_name)} · ${esc(s.phone)}</small></td><td><span class="pl ${s.plan}">${PL[s.plan]}</span></td><td class="num">${s.d<=0?`<span class="tag bad">${-s.d} kun o'tdi</span>`:`<span class="tag warn">${s.d} kun qoldi</span>`}</td><td><button class="btn sm" data-shop="${esc(s.id)}">Uzaytirish</button></td></tr>`).join('')}</table>`:'<div class="empty">Hozircha yo\'q</div>'}</div>
+    <div class="card"><h3>Eng ko'p joy egallaganlar</h3>${big.length?`<table class="tbl" style="border:0">${big.map(s=>`<tr><td><b>${esc(s.name)}</b><small>${s.products} tovar · ${s.sales} sotuv</small></td><td class="num">${bytes(s.data_bytes+s.img_bytes)}<small>rasm: ${bytes(s.img_bytes)}</small></td></tr>`).join('')}</table>`:'<div class="empty">Do\'kon yo\'q</div>'}</div>
+  </div>`;
+  $$('#t-umumiy [data-go]').forEach(b=>b.onclick=()=>{if(b.dataset.f){D.filter=b.dataset.f;rShops()}goTab(b.dataset.go)});
+  $$('#t-umumiy [data-shop]').forEach(b=>b.onclick=()=>openShop(b.dataset.shop))}
+function stat(l,n,s,go,f){return `<${go?'button':'div'} class="card stat" ${go?`data-go="${go}" ${f?`data-f="${f}"`:''} style="text-align:left;cursor:pointer;font:inherit;color:inherit"`:''}><div class="l">${esc(l)}</div><div class="n">${esc(n)}</div><div class="s">${esc(s)}</div></${go?'button':'div'}>`}
+
+/* ---------- Do'konlar ---------- */
+const FILTERS=[['all','Hammasi'],['ok','Faol'],['free','Free'],['pro','Pro'],['premium','Premium'],['lifetime','Butun umrlik'],['soon','7 kunda tugaydi'],['expired','Tugagan'],['new','Yangi (7 kun)'],['blocked','Bloklangan']];
+function shopMatch(s,f){const d=days(s.plan_until);switch(f){case 'ok':return s.ok;case 'free':case 'pro':case 'premium':case 'lifetime':return s.plan===f;
+  case 'soon':return ['pro','premium'].includes(s.plan)&&d!==null&&d>0&&d<=7;case 'expired':return ['pro','premium'].includes(s.plan)&&d!==null&&d<=0;
+  case 'new':return Date.now()-new Date(s.created_at)<7*864e5;case 'blocked':return s.blocked;default:return true}}
+$('#qShop').oninput=()=>rShops();
+function rShops(){const q=$('#qShop').value.trim().toLowerCase();
+  $('#fShop').innerHTML=FILTERS.map(([k,l])=>`<button class="chip${D.filter===k?' on':''}" data-f="${k}">${l} <span class="mu">${D.shops.filter(s=>shopMatch(s,k)).length}</span></button>`).join('');
+  $$('#fShop .chip').forEach(b=>b.onclick=()=>{D.filter=b.dataset.f;rShops()});
+  const list=D.shops.filter(s=>shopMatch(s,D.filter)).filter(s=>!q||[s.name,s.owner_name,s.phone,s.city,s.note,...(s.admins||[]).map(a=>a.login)].join(' ').toLowerCase().includes(q));
+  $('#tShops').innerHTML=`<thead><tr><th>Do'kon</th><th>Tarif</th><th class="hide-sm">Xodim / tovar / sotuv</th><th class="hide-sm">Hajm</th><th>Ro'yxatdan o'tgan</th><th class="hide-sm">Oxirgi faollik</th><th></th></tr></thead><tbody>${list.length?list.map(s=>{const d=days(s.plan_until);
+    return `<tr><td><b>${esc(s.name)}</b>${s.blocked?'<span class="tag bad">blok</span>':''}<small>${esc(s.owner_name)}${s.phone?' · '+esc(s.phone):''}${s.city?' · '+esc(s.city):''}</small><small>${(s.admins||[]).map(a=>'@'+esc(a.login)).join(', ')}</small></td>
+    <td><span class="pl ${s.plan}">${PL[s.plan]}</span>${s.plan_until?`<small>${dt(s.plan_until)} gacha${d<=0?' <span class="tag bad">tugagan</span>':d<=7?` <span class="tag warn">${d} kun</span>`:''}</small>`:''}</td>
+    <td class="num hide-sm">${s.users} / ${s.products} / ${s.sales}</td><td class="num hide-sm">${bytes(s.data_bytes+s.img_bytes)}</td>
+    <td class="num">${dt(s.created_at)}<small>${s.source==='owner'?"siz qo'shgansiz":"o'zi ro'yxatdan o'tgan"}</small></td><td class="num hide-sm">${ago(s.last_active)}</td>
+    <td><button class="btn sm" data-shop="${esc(s.id)}">Boshqarish</button></td></tr>`}).join(''):'<tr><td colspan="7" class="empty">Topilmadi</td></tr>'}</tbody>`;
+  $$('#tShops [data-shop]').forEach(b=>b.onclick=()=>openShop(b.dataset.shop))}
+
+/* ---------- Do'kon oynasi ---------- */
+const MONTHS=[1,3,6,12];let pickM=1;
+$('#dsMonths').innerHTML=MONTHS.map(m=>`<button type="button" class="chip" data-m="${m}">${m} oy</button>`).join('');
+$$('#dsMonths .chip').forEach(b=>b.onclick=()=>{pickM=+b.dataset.m;$('#dsUntil').value='';markM()});
+$('#dsUntil').oninput=()=>{if($('#dsUntil').value){pickM=0;markM()}};
+function markM(){$$('#dsMonths .chip').forEach(b=>b.classList.toggle('on',+b.dataset.m===pickM))}
+$$('#dsPlan input').forEach(i=>i.onchange=()=>termVis());
+function termVis(){const v=($('#dsPlan input:checked')||{}).value;$('#dsTerm').classList.toggle('hide',!['pro','premium'].includes(v))}
+function openShop(id){const s=D.shops.find(x=>x.id===id);if(!s)return;D.cur=s;
+  $('#dsH').textContent=s.name||"Do'kon";
+  $('#dsInfo').innerHTML=`<dt>Tarif</dt><dd><span class="pl ${s.plan}">${PL[s.plan]}</span> ${s.plan_until?dt(s.plan_until)+' gacha':''} ${s.ok?'':'<span class="tag bad">faol emas</span>'}</dd>
+   <dt>Ro'yxatdan o'tgan</dt><dd>${dtm(s.created_at)} · ${s.source==='owner'?"siz qo'shgansiz":"o'zi"}</dd><dt>Joy</dt><dd>${esc(s.city)||'—'}</dd>
+   <dt>Xodimlar</dt><dd>${s.users}</dd><dt>Tovar / sotuv</dt><dd>${s.products} / ${s.sales}</dd><dt>Hajm</dt><dd>${bytes(s.data_bytes)} ma'lumot · ${bytes(s.img_bytes)} rasm</dd>
+   <dt>Oxirgi faollik</dt><dd>${dtm(s.last_active)}</dd><dt>Tarif o'zgargan</dt><dd>${dtm(s.plan_changed_at)}</dd>`;
+  $$('#dsPlan input').forEach(i=>i.checked=i.value===s.plan);pickM=1;$('#dsUntil').value='';markM();termVis();
+  $('#dsName').value=s.name;$('#dsOwner').value=s.owner_name;$('#dsPhone').value=s.phone;$('#dsCity').value=s.city;$('#dsNote').value=s.note;
+  $('#dsAdmins').innerHTML=(s.admins||[]).length?(s.admins).map(a=>`<div class="row" style="padding:6px 0"><span><b>${esc(a.name)}</b> <span class="mu">@${esc(a.login)}</span></span><button class="btn sm" data-code="${esc(a.uid)}">Kodni almashtirish</button></div>`).join(''):'<div class="mu">Faol admin yo\'q</div>';
+  $$('#dsAdmins [data-code]').forEach(b=>b.onclick=()=>{const a=s.admins.find(x=>x.uid===b.dataset.code);openCode(a.uid,a.name,a.login,'admin')});
+  $('#dsBlock').textContent=s.blocked?'Blokdan chiqarish':'Bloklash';$('#dsBlock').className='btn '+(s.blocked?'pri':'red');
+  $('#dShop').showModal()}
+$('#dsSavePlan').onclick=()=>busy($('#dsSavePlan'),async()=>{const s=D.cur,plan=($('#dsPlan input:checked')||{}).value;if(!plan)return toast('Tarifni tanlang');
+  const a={p_shop:s.id,p_plan:plan,p_months:null,p_until:null};
+  if(['pro','premium'].includes(plan)){if($('#dsUntil').value){a.p_until=new Date($('#dsUntil').value+'T23:59:59').toISOString()}else if(pickM){a.p_months=pickM}else return toast('Muddatni tanlang')}
+  if(plan==='free'&&!confirm(`"${s.name}" Free ga o'tkazilsinmi? Ular hech narsa qila olmay qoladi.`))return;
+  try{const r=await rpc('sa_set_plan',a);toast(`${PL[plan]}${r.plan_until?' · '+dt(r.plan_until)+' gacha':''} ✓`);$('#dShop').close();await loadAll()}catch(e){toast(e.message)}});
+$('#dsSaveInfo').onclick=()=>busy($('#dsSaveInfo'),async()=>{try{await rpc('sa_update_shop',{p_shop:D.cur.id,p_name:$('#dsName').value.trim(),p_owner_name:$('#dsOwner').value.trim(),p_phone:$('#dsPhone').value.trim(),p_city:$('#dsCity').value.trim(),p_note:$('#dsNote').value.trim()});toast('Saqlandi ✓');await loadAll();openShop(D.cur.id)}catch(e){toast(e.message)}});
+$('#dsBlock').onclick=()=>busy($('#dsBlock'),async()=>{const s=D.cur,to=!s.blocked;if(to&&!confirm(`"${s.name}" bloklansinmi? Do'kondagi hech kim ishlay olmaydi.`))return;
+  try{await rpc('sa_update_shop',{p_shop:s.id,p_blocked:to});toast(to?'Bloklandi':'Blokdan chiqarildi');$('#dShop').close();await loadAll()}catch(e){toast(e.message)}});
+
+/* ---------- Yangi do'kon ---------- */
+$('#bNew').onclick=()=>{$('#fNew').reset();$('#eNew').textContent='';$('#nCode').value=genCode();nVis();$('#dNew').showModal();$('#nShop').focus()};
+$('#nGen').onclick=()=>$('#nCode').value=genCode();
+$$('#nPlan input').forEach(i=>i.onchange=nVis);function nVis(){$('#nMonthsBox').classList.toggle('hide',!['pro','premium'].includes(($('#nPlan input:checked')||{}).value))}
+$('#fNew').onsubmit=async e=>{e.preventDefault();const err=$('#eNew');err.textContent='';
+  const b={action:'sa_create_shop',shop:$('#nShop').value.trim(),name:$('#nName').value.trim(),phone:$('#nPhone').value.trim(),city:$('#nCity').value.trim(),login:$('#nLogin').value.trim().toLowerCase(),code:$('#nCode').value.trim(),plan:($('#nPlan input:checked')||{}).value,months:+$('#nMonths').value};
+  if(!/^[a-z0-9_.-]{3,30}$/.test(b.login)){err.textContent="Login 3–30 ta lotin harf, raqam, _ . -";return}if(b.code.length<6){err.textContent='Kod kamida 6 belgi';return}
+  await busy($('#nSave'),async()=>{try{await fn(b);$('#dNew').close();await loadAll();alert(`Do'kon yaratildi.\n\nMijozga yuboring:\nSayt: ${new URL('../',location.href).href}\nLogin: ${b.login}\nKod: ${b.code}`)}catch(x){err.textContent=x.message}})};
+
+/* ---------- Kod almashtirish ---------- */
+let codeFor=null;
+function openCode(uid,name,login,role){codeFor={uid,role};$('#dcH').textContent='Yangi kod: '+(name||login);$('#dcP').textContent=`@${login} — eski kod ishlamay qoladi. Yangi kodni egasiga xavfsiz yo'l bilan yuboring.`;$('#dcCode').value=genCode();$('#eCode').textContent='';$('#dCode').showModal()}
+$('#dcGen').onclick=()=>$('#dcCode').value=genCode();
+$('#fCode').onsubmit=async e=>{e.preventDefault();const code=$('#dcCode').value.trim();if(code.length<(codeFor.role==='admin'?6:4)){$('#eCode').textContent='Kod juda qisqa';return}
+  await busy($('#fCode button.pri'),async()=>{try{await fn({action:'sa_set_code',uid:codeFor.uid,code});$('#dCode').close();toast('Kod almashtirildi ✓')}catch(x){$('#eCode').textContent=x.message}})};
+
+/* ---------- Foydalanuvchilar ---------- */
+$('#qUser').oninput=()=>rUsers();
+function rUsers(){const q=$('#qUser').value.trim().toLowerCase();const list=D.users.filter(u=>!q||[u.name,u.login,u.shop_name].join(' ').toLowerCase().includes(q));
+  $('#tUsers').innerHTML=`<thead><tr><th>Ism</th><th>Do'kon</th><th>Rol</th><th>Qo'shilgan</th><th class="hide-sm">Oxirgi kirish</th><th></th></tr></thead><tbody>${list.length?list.map(u=>`<tr>
+    <td><b>${esc(u.name)}</b>${u.disabled?'<span class="tag bad">o\'chirilgan</span>':''}<small>@${esc(u.login)}</small></td>
+    <td>${esc(u.shop_name)}<small><span class="pl ${u.plan}" style="font-size:11px">${PL[u.plan]||''}</span></small></td>
+    <td>${u.role==='admin'?'Admin':'Ishchi'}</td><td class="num">${dt(u.created_at)}</td><td class="num hide-sm">${u.last_sign_in_at?dtm(u.last_sign_in_at):'—'}</td>
+    <td style="white-space:nowrap"><button class="btn sm" data-code="${esc(u.uid)}">Kod</button> <button class="btn sm ${u.disabled?'':'red'}" data-act="${esc(u.uid)}">${u.disabled?'Yoqish':"O'chirish"}</button></td></tr>`).join(''):'<tr><td colspan="6" class="empty">Topilmadi</td></tr>'}</tbody>`;
+  $$('#tUsers [data-code]').forEach(b=>b.onclick=()=>{const u=D.users.find(x=>x.uid===b.dataset.code);openCode(u.uid,u.name,u.login,u.role)});
+  $$('#tUsers [data-act]').forEach(b=>b.onclick=()=>busy(b,async()=>{const u=D.users.find(x=>x.uid===b.dataset.act),on=u.disabled;
+    if(!on&&!confirm(`@${u.login} tizimga kira olmay qolsinmi?`))return;try{await fn({action:'sa_user_active',uid:u.uid,active:on});toast(on?'Yoqildi':"O'chirildi");await loadAll()}catch(e){toast(e.message)}}))}
+
+/* ---------- Jurnal ---------- */
+const ACT={plan:'Tarif',block:'Bloklandi',unblock:'Blokdan chiqarildi',edit:"Ma'lumot tahrirlandi",create_shop:"Do'kon yaratildi",set_code:'Kod almashtirildi',user_on:'Foydalanuvchi yoqildi',user_off:"Foydalanuvchi o'chirildi"};
+function rAudit(){$('#tAudit').innerHTML=`<thead><tr><th>Vaqt</th><th>Amal</th><th>Do'kon</th><th>Tafsilot</th></tr></thead><tbody>${D.audit.length?D.audit.map(a=>{const d=a.detail||{};
+  const det=a.action==='plan'||a.action==='create_shop'?`${PL[d.plan]||''}${d.until?' · '+dt(d.until)+' gacha':''}${d.months?' · '+d.months+' oy':''}${d.login?' · @'+d.login:''}`:d.login?'@'+d.login:'';
+  return `<tr><td class="num">${dtm(a.t)}</td><td>${esc(ACT[a.action]||a.action)}</td><td>${esc(a.shop_name||'')}</td><td>${esc(det)}</td></tr>`}).join(''):'<tr><td colspan="4" class="empty">Hali amal yo\'q</td></tr>'}</tbody>`}
+
+/* ---------- Umumiy ---------- */
+$$('[data-close]').forEach(b=>b.onclick=()=>b.closest('dialog').close());
+(async()=>{const {data}=await sb.auth.getSession();if(data.session)await afterPassword();else $('#em').focus()})();
+</script>
+</body>
+</html>

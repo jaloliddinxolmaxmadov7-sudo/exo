@@ -419,7 +419,20 @@ body.locked .app,body.locked .tabbar{visibility:hidden}
 .lg-form{display:flex;flex-direction:column;justify-content:center;padding:clamp(28px,6vw,80px);max-width:520px;width:100%;margin:0 auto}
 .lg-form h2{font-size:32px;letter-spacing:-.02em;margin:0 0 6px;line-height:1.1}
 .lg-form p{margin:0 0 22px;color:var(--mute)}
-.lg-form .f{padding:10px 16px}.lg-form .f input{font-size:18px}
+.lg-form .f{padding:10px 16px}
+#lgNameBox{display:contents}#lgNameBox[hidden]{display:none}
+.plock{position:fixed;inset:0;z-index:105;background:var(--bg);overflow:auto;padding:24px 16px}.plock[hidden]{display:none}
+.plock-in{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:12px;text-align:center;align-items:center}
+.plock-in h2{margin:6px 0 0;font-size:26px}.plock-in>p{margin:0;max-width:520px;line-height:1.5}
+.pl-tg{text-decoration:none;display:inline-flex;align-items:center;justify-content:center;padding:0 22px}
+.pl-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;width:100%;margin-top:8px;text-align:left}
+.pl-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}.pl-card.on{border-color:var(--blue);box-shadow:0 0 0 2px color-mix(in srgb,var(--blue) 25%,transparent)}
+.pl-card h3{margin:0 0 2px}.pl-card .pr{font-weight:700;font-size:18px;margin:4px 0 8px}.pl-card ul{margin:0;padding-left:18px;line-height:1.6;font-size:14px}
+.pl-acts{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.plan-now{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.plan-now b{font-size:18px}.plan-tag{background:var(--soft);border-radius:999px;padding:4px 12px;font-weight:600}
+body.no-qarz [data-go="qarz"],body.no-qarz #debtBtn,body.no-qarz [data-mt="Qarz"],body.no-qarz [data-sm="Qarz"],body.no-qarz [data-sdm="Qarz"]{display:none!important}
+body.no-qarz .paybtns{grid-template-columns:1fr}
+.plan-tag.warn{background:color-mix(in srgb,var(--red) 18%,transparent);color:var(--red)}.lg-form .f input{font-size:18px}
 .lg-err{color:var(--red);font-weight:600;min-height:24px;margin:-2px 0 10px;font-size:15px}
 .lg-form .mlogo2{display:none}
 .shake{animation:sh .35s}@keyframes sh{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
@@ -476,12 +489,17 @@ main{padding:18px 14px 110px}
     <div class="logo mlogo2"><i>e</i>ezome</div>
     <h2 id="lgH">Tizimga kirish</h2>
     <p id="lgP">Login va kirish kodini kiriting</p>
-    <div class="f" id="lgNameBox" hidden><label for="lgName">Ismingiz</label><input id="lgName" maxlength="40" autocomplete="name"></div>
+    <div id="lgNameBox" hidden>
+      <div class="f"><label for="lgName">Ismingiz</label><input id="lgName" maxlength="40" autocomplete="name"></div>
+      <div class="f"><label for="lgShop">Do'kon nomi</label><input id="lgShop" maxlength="60" autocomplete="organization"></div>
+      <div class="f"><label for="lgPhone">Telefon</label><input id="lgPhone" type="tel" inputmode="tel" maxlength="30" autocomplete="tel" placeholder="+998"></div>
+      <div class="f"><label for="lgCity">Shahar / tuman</label><input id="lgCity" maxlength="40" autocomplete="address-level2"></div>
+    </div>
     <div class="f"><label for="lgUser">Login</label><input id="lgUser" autocomplete="username" autocapitalize="none" spellcheck="false" required></div>
     <div class="f"><label for="lgPin">Kod</label><div class="inrow"><input id="lgPin" type="password" autocomplete="current-password" autocapitalize="none" autocorrect="off" spellcheck="false" required><button class="btn" type="button" id="lgEye" aria-label="Kodni ko'rsatish">Ko'rsatish</button></div></div>
     <div class="lg-err" id="lgErr" role="alert"></div>
     <button class="btn pri big" id="lgBtn">Kirish</button>
-    <button class="lnk b" type="button" id="lgSetup" hidden style="margin-top:14px;align-self:center">Birinchi marta? Admin yaratish</button>
+    <button class="lnk b" type="button" id="lgSetup" hidden style="margin-top:14px;align-self:center">Yangi do'kon ochish</button>
   </form>
 </div>
 <div class="app">
@@ -621,6 +639,12 @@ main{padding:18px 14px 110px}
   <section class="view" id="v-sozlamalar" hidden>
     <header class="top"><h1>Sozlamalar</h1></header>
     <div class="set">
+      <div class="card adm" id="planCard" hidden>
+        <h3>Tarif</h3>
+        <div class="plan-now" id="planNow"></div>
+        <p class="mu" id="planInfo" style="margin:8px 0 10px"></p>
+        <a class="btn ghost" href="https://t.me/perdeloto" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center">Tarifni uzaytirish: @perdeloto</a>
+      </div>
       <div class="card">
         <h3>Logotip va do'kon</h3><p class="mu">Logo menyuda, kirish oynasida va chekda chiqadi.</p>
         <div class="logobox"><div class="pv" id="logoPv">e</div><div class="bt"><label class="btn pri" for="logoFile">Logo yuklash</label><button class="btn ghost" id="logoDel">O'chirish</button></div></div>
@@ -969,6 +993,17 @@ main{padding:18px 14px 110px}
   </div>
 </div></div>
 
+<div class="plock" id="plock" hidden role="dialog" aria-modal="true" aria-labelledby="plH">
+  <div class="plock-in">
+    <div class="logo"><i>e</i>ezome</div>
+    <h2 id="plH">Tarif</h2>
+    <p id="plP" class="mu"></p>
+    <a class="btn pri big pl-tg" id="plTg" href="https://t.me/perdeloto" target="_blank" rel="noopener">Telegramda yozish: @perdeloto</a>
+    <div class="pl-cards" id="plCards"></div>
+    <div class="pl-acts"><button class="btn ghost" type="button" id="plCheck">Tekshirish</button><button class="btn ghost" type="button" id="plOut">Chiqish</button></div>
+    <div class="mu" id="plMsg" role="status" style="min-height:20px;margin-top:8px"></div>
+  </div>
+</div>
 <div class="toast" id="toast" role="status"></div>
 
 <script src="vendor/supabase.js"></script>
@@ -1816,7 +1851,7 @@ function tries(){try{return JSON.parse(localStorage.getItem(LK)||'{"n":0,"until"
 function setTries(t){try{localStorage.setItem(LK,JSON.stringify(t))}catch(e){}}
 function unlock(u){S.user={id:u.id,name:u.name,login:u.login};S.role=u.role;document.body.classList.remove('locked');last=Date.now();if(S.goHome){S.goHome=false;const h=u.role==='admin'?'bosh':'hisobotim';if(location.hash.slice(1)!==h){history.replaceState(null,'','#'+h)}}route();if(u.role==='admin'){setTimeout(checkOverdue,800);setTimeout(fillBarcodes,1200)}}
 async function fillBarcodes(){if(!isAdmin())return;for(const [id,p] of Object.entries(S.products)){const z=sizesOf(p);const need=!p.barcode||(z&&z.some(x=>!x.b));if(!need)continue;const ex=new Set();const np={...p,barcode:p.barcode||newEAN(ex)};if(z)np.sizes=z.map(x=>x.b?x:{...x,b:newEAN(ex)});if(!await put('products',id,np))break}}
-function lock(){try{localStorage.removeItem(AK)}catch(e){}if(FB&&S.fbUser){S.fbUser=null;if(SB){sbStop();try{S.sb.auth.signOut()}catch(e){}}else{fbStop();try{firebase.auth().signOut()}catch(e){}}}S.user=null;S.role=null;S.cart=S.cart||[];document.body.classList.add('locked');$$('.ov.on').forEach(o=>close(o.id));$('#lgPin').value='';$('#lgPin').type='password';$('#lgEye').textContent='Ko\'rsatish';$('#lgErr').textContent='';setTimeout(()=>$('#lgUser').value?$('#lgPin').focus():$('#lgUser').focus(),50)}
+function lock(){try{localStorage.removeItem(AK)}catch(e){}$('#plock').hidden=true;clearInterval(S.planTimer);if(FB&&S.fbUser){S.fbUser=null;if(SB){sbStop();try{S.sb.auth.signOut()}catch(e){}}else{fbStop();try{firebase.auth().signOut()}catch(e){}}}S.user=null;S.role=null;S.cart=S.cart||[];document.body.classList.add('locked');$$('.ov.on').forEach(o=>close(o.id));$('#lgPin').value='';$('#lgPin').type='password';$('#lgEye').textContent='Ko\'rsatish';$('#lgErr').textContent='';setTimeout(()=>$('#lgUser').value?$('#lgPin').focus():$('#lgUser').focus(),50)}
 function checkSession(){if(FB)return;const a=getSession();const u=a&&users().find(x=>x.id===a.uid);if(u&&u.hash===a.h){if(!S.user||S.user.id!==u.id||S.role!==u.role||document.body.classList.contains('locked'))unlock(u)}else if(!document.body.classList.contains('locked'))lock()}
 $('#lgForm').onsubmit=async e=>{e.preventDefault();const err=$('#lgErr');
   if(FB&&S.setupMode){fbSetupSubmit();return}
@@ -1865,7 +1900,7 @@ function fbSubscribe(uid,adm){const db=S.fdb,need=255;let got=0;
 async function fbLogin(login,code){if(SB)return sbLogin(login,code);if(!login||!code)return false;if(!navigator.onLine)return "Internet yo'q — ulanishni tekshiring";
   S.justLogged=true;try{await firebase.auth().signInWithEmailAndPassword(fbEmail(login),fbPass(code));return true}
   catch(e){S.justLogged=false;const c=(e&&e.code)||'';if(c==='auth/network-request-failed')return "Internet yo'q — ulanishni tekshiring";if(c==='auth/too-many-requests')return "Juda ko'p urinish. Birozdan keyin qayta urining.";return false}}
-$('#lgSetup').onclick=()=>{S.setupMode=!S.setupMode;$('#lgNameBox').hidden=!S.setupMode;$('#lgH').textContent=S.setupMode?'Admin yaratish':'Tizimga kirish';$('#lgP').textContent=S.setupMode?"Faqat birinchi marta: do'kon egasining login va kodini o'ylab toping":'Login va kirish kodini kiriting';$('#lgBtn').textContent=S.setupMode?'Admin yaratish':'Kirish';$('#lgSetup').textContent=S.setupMode?'Orqaga: kirish':'Birinchi marta? Admin yaratish';$('#lgErr').textContent='';$('#lgPin').setAttribute('autocomplete',S.setupMode?'new-password':'current-password');(S.setupMode?$('#lgName'):$('#lgUser')).focus()};
+$('#lgSetup').onclick=()=>{S.setupMode=!S.setupMode;$('#lgNameBox').hidden=!S.setupMode;$('#lgH').textContent=S.setupMode?"Yangi do'kon ochish":'Tizimga kirish';$('#lgP').textContent=S.setupMode?"Do'kon ma'lumotlarini yozing va o'zingiz uchun login hamda kod o'ylab toping":'Login va kirish kodini kiriting';$('#lgBtn').textContent=S.setupMode?"Do'kon ochish":'Kirish';$('#lgSetup').textContent=S.setupMode?'Orqaga: kirish':"Yangi do'kon ochish";$('#lgErr').textContent='';$('#lgPin').setAttribute('autocomplete',S.setupMode?'new-password':'current-password');(S.setupMode?$('#lgName'):$('#lgUser')).focus()};
 async function fbSetupSubmit(){if(SB)return sbSetup();const err=$('#lgErr'),name=$('#lgName').value.trim(),login=$('#lgUser').value.trim().toLowerCase(),code=$('#lgPin').value.trim();
   if(name.length<2){err.textContent='Ismingizni yozing';return}if(!/^[a-z0-9_.-]{3,30}$/.test(login)){err.textContent="Login 3–30 ta lotin harf, raqam, _ . - bo'lsin";return}
   if(code.length<6){err.textContent='Admin kodi kamida 6 belgi bo\'lsin (harf va raqam aralash bo\'lgani yaxshi)';return}
@@ -1936,11 +1971,14 @@ async function sbOnUser(u){if(S.setupPending)return;const seq=S.fbSeq=(S.fbSeq||
   let ud=null;try{const r=await S.sb.from('docs').select('data').eq('col','users').eq('id',u.id).maybeSingle();ud=r.data?r.data.data:null}catch(e){}
   if(seq!==S.fbSeq)return;sbStop();
   if(!ud||ud.disabled){S.fbUser=null;try{await S.sb.auth.signOut()}catch(e){}$('#lgErr').textContent=ud?"Bu xodim o'chirilgan — admin bilan bog'laning":"Bu login ezome xodimi emas";return}
+  let inf=null;try{const r=await S.sb.rpc('my_shop_info');if(r.error)throw r.error;inf=r.data}catch(e){S.fbUser=null;$('#lgErr').textContent="Do'kon ma'lumoti olinmadi: "+sbErr(e);try{await S.sb.auth.signOut()}catch(x){}return}
+  if(seq!==S.fbSeq)return;S.plan=inf||{ok:false,plan:'free'};
+  if(!S.plan.ok){S.justLogged=false;showPlanLock(ud);return}
   S.fbUser={uid:u.id,id:u.id};S.db=sbDb;S.ready=false;S.products={};S.sales={};S.log={};S.customers={};S.debts={};S.reports={};S.users={};S.nt=null;S.wnt=null;
-  unlock({id:u.id,name:ud.name,login:ud.login,role:ud.role});sbSubscribe(u.id,ud.role==='admin');
+  unlock({id:u.id,name:ud.name,login:ud.login,role:ud.role});sbSubscribe(u.id,ud.role==='admin');rPlan();planWatch();
   if(S.justLogged){S.justLogged=false;logEv('login')}}
 const sbDb={doc:path=>{const i=path.indexOf('/'),c=path.slice(0,i),id=path.slice(i+1);return{
-  set:async d=>{const {error}=await S.sb.rpc('put_doc',{p_col:c,p_id:id,p_data:d});if(error)throw{message:/row-level|permission|42501|faqat|Ruxsat/i.test(error.message)?"ruxsat yo'q":sbErr(error)}},
+  set:async d=>{const {error}=await S.sb.rpc('put_doc',{p_col:c,p_id:id,p_data:d});if(error)throw{message:/Tarif/.test(error.message)?error.message:/row-level|permission|42501|faqat|Ruxsat/i.test(error.message)?"ruxsat yo'q":sbErr(error)}},
   delete:async()=>{const {error}=await S.sb.from('docs').delete().eq('col',c).eq('id',id);if(error)throw{message:sbErr(error)}}}}};
 const SBCOLS=['products','sales','log','customers','debts','reports','users','settings','paynet_orders'];
 async function sbLoad(col,q){const all={};const page=1000;for(let from=0;from<6000;from+=page){let b=S.sb.from('docs').select('id,data').eq('col',col);if(q)b=q(b);const {data,error}=await b.range(from,from+page-1);if(error)throw error;data.forEach(r=>all[r.id]=r.data);if(data.length<page)break}return all}
@@ -1950,7 +1988,7 @@ async function sbLoadAll(uid,adm){const since=Date.now()-FB_DAYS*864e5,d0=new Da
   Object.assign(S,{products,sales,log,customers,debts,reports,users:us});S.settings={...DEF,...(st.main||{})};
   if(!adm){const me=S.users[uid];if(!me||me.disabled){toast("Kirish huquqingiz o'chirildi");lock();return false}}return true}
 function sbSubscribe(uid,adm){const ch=S.sb.channel('ezome-docs');let first=true;
-  ch.on('postgres_changes',{event:'*',schema:'public',table:'docs'},p=>{const n=p.new&&p.new.col?p.new:null,o=p.old||{};const col=(n&&n.col)||o.col,id=(n&&n.id)||o.id;if(!col||!id)return;
+  ch.on('postgres_changes',{event:'*',schema:'public',table:'docs'},p=>{const n=p.new&&p.new.col?p.new:null,o=p.old||{};const col=(n&&n.col)||o.col,id=(n&&n.id)||o.id;if(!col||!id)return;if(S.plan&&S.plan.id&&((n&&n.shop&&n.shop!==S.plan.id)||(!n&&o.shop&&o.shop!==S.plan.id)))return;
     if(col==='settings'){if(id==='main'&&n)S.settings={...DEF,...n.data}}
     else if(SBCOLS.includes(col)){S[col]=S[col]||{};if(p.eventType==='DELETE'||!n)delete S[col][id];else S[col][id]=n.data}else return;
     if(col==='users'&&!adm){const me=S.users[uid];if(!me||me.disabled){toast("Kirish huquqingiz o'chirildi");lock();return}}
@@ -1967,11 +2005,30 @@ async function sbFn(body,anon){const c=window.EZ_SUPA;const h={'Content-Type':'a
   let r;try{r=await fetch(c.url+'/functions/v1/staff',{method:'POST',headers:h,body:JSON.stringify(body)})}catch(e){throw{message:"Internet yo'q — ulanishni tekshiring"}}
   let j={};try{j=await r.json()}catch(e){}if(!r.ok||j.error)throw{message:j.error||('Server xatosi '+r.status)};return j}
 async function sbSetup(){const err=$('#lgErr'),name=$('#lgName').value.trim(),login=$('#lgUser').value.trim().toLowerCase(),code=$('#lgPin').value.trim();
-  if(name.length<2){err.textContent='Ismingizni yozing';return}if(!/^[a-z0-9_.-]{3,30}$/.test(login)){err.textContent="Login 3–30 ta lotin harf, raqam, _ . - bo'lsin";return}
+  const shop=$('#lgShop').value.trim(),phone=$('#lgPhone').value.trim(),city=$('#lgCity').value.trim();
+  if(name.length<2){err.textContent='Ismingizni yozing';return}if(shop.length<2){err.textContent="Do'kon nomini yozing";return}if(phone.replace(/\D/g,'').length<9){err.textContent='Telefon raqamini yozing';return}if(!/^[a-z0-9_.-]{3,30}$/.test(login)){err.textContent="Login 3–30 ta lotin harf, raqam, _ . - bo'lsin";return}
   if(code.length<6){err.textContent="Admin kodi kamida 6 belgi bo'lsin (harf va raqam aralash bo'lgani yaxshi)";return}
-  $('#lgBtn').disabled=true;try{await sbFn({action:'setup',name,login,code},true)}catch(e){$('#lgBtn').disabled=false;err.textContent=e.message;return}
-  const r=await sbLogin(login,code);$('#lgBtn').disabled=false;if(r!==true){err.textContent=typeof r==='string'?r:'Admin yaratildi, endi login va kod bilan kiring';return}
-  S.setupMode=true;$('#lgSetup').click();toast('Admin yaratildi. Xush kelibsiz!')}
+  $('#lgBtn').disabled=true;try{await sbFn({action:'signup',name,shop,phone,city,login,code},true)}catch(e){$('#lgBtn').disabled=false;err.textContent=e.message;return}
+  const r=await sbLogin(login,code);$('#lgBtn').disabled=false;if(r!==true){err.textContent=typeof r==='string'?r:"Do'kon ochildi, endi login va kod bilan kiring";return}
+  S.setupMode=true;$('#lgSetup').click();toast("Do'kon ochildi")}
+
+/* ---------- Tariflar ---------- */
+const PLAN_NAMES={free:'Free',pro:'Pro',premium:'Premium'};
+function planCards(cur){const P=window.EZ_PLANS||{},pr=k=>esc((P[k]&&P[k].price)||'Narxi — Telegramda');
+  const c=(k,feat)=>`<div class="pl-card${cur===k?' on':''}"><h3>${PLAN_NAMES[k]}</h3><div class="pr">${k==='free'?'0 so\'m':pr(k)}</div><ul>${feat.map(f=>`<li>${f}</li>`).join('')}</ul></div>`;
+  return c('free',["Faqat ro'yxatdan o'tish","Tovar, sotuv, ishchi qo'shib bo'lmaydi"])+c('pro',['Kassa: Naqd, Karta, Click, Payme','Katalog, shtrix-kod, yorliqlar','10 tagacha xodim, cheksiz tovar','Sotuvlar, tarix, statistika, hisobotlar','Qarzlar bo\'limi yo\'q'])+c('premium',["Pro'dagi hammasi",'Qarzlar: qarzga sotish, mijozlar, muddat eslatmasi','Cheksiz xodim va tovar','Birinchi navbatda yordam'])}
+function showPlanLock(ud){const p=S.plan||{},exp=p.until&&new Date(p.until)<new Date();
+  $('#plH').textContent=p.blocked?"Do'kon vaqtincha to'xtatilgan":p.plan==='free'?(ud&&ud.name?ud.name+', xush kelibsiz!':'Xush kelibsiz!'):'Tarif muddati tugadi';
+  $('#plP').textContent=p.blocked?"Batafsil ma'lumot uchun Telegram orqali bog'laning.":p.plan==='free'?"Do'koningiz ro'yxatdan o'tdi. Ishlatishni boshlash uchun Pro yoki Premium tarifini ulang — to'lov va ulash Telegram orqali.":`${PLAN_NAMES[p.plan]||''} tarifi ${exp?new Date(p.until).toLocaleDateString('uz-UZ')+' da':''} tugadi. Ma'lumotlaringiz saqlangan — uzaytirish uchun Telegram orqali yozing.`;
+  $('#plCards').innerHTML=p.blocked?'':planCards(p.plan);$('#plMsg').textContent='';$('#plock').hidden=false}
+$('#plOut').onclick=async()=>{$('#plock').hidden=true;try{await S.sb.auth.signOut()}catch(e){}};
+$('#plCheck').onclick=async()=>{const m=$('#plMsg');m.textContent='Tekshirilmoqda…';try{const r=await S.sb.rpc('my_shop_info');if(r.error)throw r.error;if(r.data&&r.data.ok){m.textContent='Tarif faol ✓';location.reload()}else m.textContent="Hali ulanmagan. Telegram: @perdeloto"}catch(e){m.textContent=sbErr(e)}};
+function rPlan(){const p=S.plan;if(!p||!$('#planCard'))return;$('#planCard').hidden=S.role!=='admin';
+  const days=p.until?Math.ceil((new Date(p.until)-Date.now())/864e5):null,warn=days!==null&&days<=5;
+  $('#planNow').innerHTML=`<b>${esc(PLAN_NAMES[p.plan]||p.plan)}</b><span class="plan-tag${warn?' warn':''}">${p.until?new Date(p.until).toLocaleDateString('uz-UZ')+' gacha · '+days+' kun qoldi':'Muddatsiz'}</span>`;
+  const L=p.limits||{};const lm=v=>v==null?'cheksiz':Number(v).toLocaleString('ru-RU')+' tagacha';$('#planInfo').textContent=`Xodimlar: ${lm(L.users)} · Tovarlar: ${lm(L.products)} · Qarzlar: ${L.debts?'bor':'yo\'q (Premium\'da)'}`;document.body.classList.toggle('no-qarz',!L.debts);if(!L.debts&&location.hash==='#qarz')location.hash=S.role==='admin'?'#bosh':'#hisobotim';
+  if(warn&&S.role==='admin'&&!S.planWarned){S.planWarned=true;setTimeout(()=>toast(`Tarif ${days} kundan keyin tugaydi — uzaytirish: Telegram @perdeloto`),1500)}}
+function planWatch(){clearInterval(S.planTimer);S.planTimer=setInterval(async()=>{if(!S.sb||!S.fbUser)return;try{const r=await S.sb.rpc('my_shop_info');if(r.error||!r.data)return;S.plan=r.data;rPlan();if(!r.data.ok){showPlanLock(S.users&&S.fbUser?S.users[S.fbUser.uid]:null)}}catch(e){}},20*60e3)}
 async function sbStore(list){const out=[],uid=S.fbUser?S.fbUser.uid:'x',bk=S.sb.storage.from('img');
   for(const p of list){if(!isImg(p)){out.push(p);continue}const path=`${uid}/${Date.now().toString(36)}${Math.random().toString(36).slice(2,8)}.jpg`;
     const {error}=await bk.upload(path,dataToBlob(p),{contentType:'image/jpeg',cacheControl:'31536000',upsert:false});if(error)throw{message:sbErr(error)};out.push(bk.getPublicUrl(path).data.publicUrl)}

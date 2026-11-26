@@ -1,6 +1,6 @@
 // ezome service worker: ilova qobig'ini keshlaydi, internet uzilsa ham ochiladi.
 // Yo'llar nisbiy — sayt istalgan manzil yoki papkada ishlaydi.
-const V = 'ezome-v4';
+const V = 'ezome-v5';
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'config.js', 'vendor/supabase.js',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/favicon-32.png'];
 const FRESH = ['index.html', 'config.js', 'sw.js', 'firebase-config.js'];
