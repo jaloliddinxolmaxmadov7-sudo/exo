@@ -10,6 +10,6 @@ window.EZ_PAYNET_AUTO = false;
 window.EZ_SUPPORT = 'Telegram: @perdeloto';
 // Tariflar narxi — saytda shunday ko'rinadi. Bo'sh qoldirilsa: "Narxi — Telegramda".
 window.EZ_PLANS = {
-  pro: { price: '' },      // masalan: '99 000 so\'m / oy'
-  premium: { price: '' }   // masalan: '199 000 so\'m / oy'
+  pro: { price: '150 000 so\'m / oy' },      // kassa, katalog, xodimlar, hisobotlar (qarzlarsiz)
+  premium: { price: '300 000 so\'m / oy' }   // hammasi + Qarzlar bo'limi
 };

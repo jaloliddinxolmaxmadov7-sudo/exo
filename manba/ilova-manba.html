@@ -430,6 +430,8 @@ body.locked .app,body.locked .tabbar{visibility:hidden}
 .pl-card h3{margin:0 0 2px}.pl-card .pr{font-weight:700;font-size:18px;margin:4px 0 8px}.pl-card ul{margin:0;padding-left:18px;line-height:1.6;font-size:14px}
 .pl-acts{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 .plan-now{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.plan-now b{font-size:18px}.plan-tag{background:var(--soft);border-radius:999px;padding:4px 12px;font-weight:600}
+body.no-qarz [data-go="qarz"],body.no-qarz #debtBtn,body.no-qarz [data-mt="Qarz"],body.no-qarz [data-sm="Qarz"],body.no-qarz [data-sdm="Qarz"]{display:none!important}
+body.no-qarz .paybtns{grid-template-columns:1fr}
 .plan-tag.warn{background:color-mix(in srgb,var(--red) 18%,transparent);color:var(--red)}.lg-form .f input{font-size:18px}
 .lg-err{color:var(--red);font-weight:600;min-height:24px;margin:-2px 0 10px;font-size:15px}
 .lg-form .mlogo2{display:none}
@@ -2005,7 +2007,7 @@ async function sbSetup(){const err=$('#lgErr'),name=$('#lgName').value.trim(),lo
 const PLAN_NAMES={free:'Free',pro:'Pro',premium:'Premium'};
 function planCards(cur){const P=window.EZ_PLANS||{},pr=k=>esc((P[k]&&P[k].price)||'Narxi — Telegramda');
   const c=(k,feat)=>`<div class="pl-card${cur===k?' on':''}"><h3>${PLAN_NAMES[k]}</h3><div class="pr">${k==='free'?'0 so\'m':pr(k)}</div><ul>${feat.map(f=>`<li>${f}</li>`).join('')}</ul></div>`;
-  return c('free',["Faqat ro'yxatdan o'tish","Tovar, sotuv, ishchi qo'shib bo'lmaydi"])+c('pro',['Kassa, katalog, shtrix-kod','4 tagacha xodim (admin bilan)','1000 tagacha tovar','Qarzlar va hisobotlar'])+c('premium',["Pro'dagi hammasi",'Cheksiz xodim','Cheksiz tovar','Birinchi navbatda yordam'])}
+  return c('free',["Faqat ro'yxatdan o'tish","Tovar, sotuv, ishchi qo'shib bo'lmaydi"])+c('pro',['Kassa: Naqd, Karta, Click, Payme','Katalog, shtrix-kod, yorliqlar','10 tagacha xodim, cheksiz tovar','Sotuvlar, tarix, statistika, hisobotlar','Qarzlar bo\'limi yo\'q'])+c('premium',["Pro'dagi hammasi",'Qarzlar: qarzga sotish, mijozlar, muddat eslatmasi','Cheksiz xodim va tovar','Birinchi navbatda yordam'])}
 function showPlanLock(ud){const p=S.plan||{},exp=p.until&&new Date(p.until)<new Date();
   $('#plH').textContent=p.blocked?"Do'kon vaqtincha to'xtatilgan":p.plan==='free'?(ud&&ud.name?ud.name+', xush kelibsiz!':'Xush kelibsiz!'):'Tarif muddati tugadi';
   $('#plP').textContent=p.blocked?"Batafsil ma'lumot uchun Telegram orqali bog'laning.":p.plan==='free'?"Do'koningiz ro'yxatdan o'tdi. Ishlatishni boshlash uchun Pro yoki Premium tarifini ulang — to'lov va ulash Telegram orqali.":`${PLAN_NAMES[p.plan]||''} tarifi ${exp?new Date(p.until).toLocaleDateString('uz-UZ')+' da':''} tugadi. Ma'lumotlaringiz saqlangan — uzaytirish uchun Telegram orqali yozing.`;
@@ -2015,7 +2017,7 @@ $('#plCheck').onclick=async()=>{const m=$('#plMsg');m.textContent='Tekshirilmoqd
 function rPlan(){const p=S.plan;if(!p||!$('#planCard'))return;$('#planCard').hidden=S.role!=='admin';
   const days=p.until?Math.ceil((new Date(p.until)-Date.now())/864e5):null,warn=days!==null&&days<=5;
   $('#planNow').innerHTML=`<b>${esc(PLAN_NAMES[p.plan]||p.plan)}</b><span class="plan-tag${warn?' warn':''}">${p.until?new Date(p.until).toLocaleDateString('uz-UZ')+' gacha · '+days+' kun qoldi':'Muddatsiz'}</span>`;
-  const L=p.limits||{};$('#planInfo').textContent=`Xodimlar: ${L.users==null?'cheksiz':L.users+' tagacha'} · Tovarlar: ${L.products==null?'cheksiz':L.products+' tagacha'}`;
+  const L=p.limits||{};const lm=v=>v==null?'cheksiz':Number(v).toLocaleString('ru-RU')+' tagacha';$('#planInfo').textContent=`Xodimlar: ${lm(L.users)} · Tovarlar: ${lm(L.products)} · Qarzlar: ${L.debts?'bor':'yo\'q (Premium\'da)'}`;document.body.classList.toggle('no-qarz',!L.debts);if(!L.debts&&location.hash==='#qarz')location.hash=S.role==='admin'?'#bosh':'#hisobotim';
   if(warn&&S.role==='admin'&&!S.planWarned){S.planWarned=true;setTimeout(()=>toast(`Tarif ${days} kundan keyin tugaydi — uzaytirish: Telegram @perdeloto`),1500)}}
 function planWatch(){clearInterval(S.planTimer);S.planTimer=setInterval(async()=>{if(!S.sb||!S.fbUser)return;try{const r=await S.sb.rpc('my_shop_info');if(r.error||!r.data)return;S.plan=r.data;rPlan();if(!r.data.ok){showPlanLock(S.users&&S.fbUser?S.users[S.fbUser.uid]:null)}}catch(e){}},20*60e3)}
 async function sbStore(list){const out=[],uid=S.fbUser?S.fbUser.uid:'x',bk=S.sb.storage.from('img');

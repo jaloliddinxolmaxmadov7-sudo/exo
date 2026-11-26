@@ -65,8 +65,9 @@ create unique index if not exists docs_users_uid on public.docs (id) where col =
 
 -- ===================== Yordamchi funksiyalar =====================
 -- Tarif chegaralari — bitta joyda. null = cheksiz. users = admin bilan birga faol xodimlar soni.
+-- debts = Qarzlar bo'limi (mijozlar va qarzlar) — faqat Premium va butun umrlikda.
 create or replace function ezp.limits() returns jsonb language sql immutable set search_path = '' as $$
-  select '{"free":{"users":0,"products":0},"pro":{"users":4,"products":1000},"premium":{"users":null,"products":null},"lifetime":{"users":null,"products":null}}'::jsonb $$;
+  select '{"free":{"users":0,"products":0,"debts":false},"pro":{"users":10,"products":null,"debts":false},"premium":{"users":null,"products":null,"debts":true},"lifetime":{"users":null,"products":null,"debts":true}}'::jsonb $$;
 
 create or replace function ezp.my_shop() returns text language sql stable security definer set search_path = '' as $$
   select d.shop from public.docs d where d.col = 'users' and d.id = (select auth.uid())::text
@@ -100,16 +101,23 @@ begin
   new.updated_at := now(); return new;
 end $$;
 
--- Tovar soni tarif chegarasidan oshmasin
+-- Tarif tekshiruvi: tovar soni chegarasi va Qarzlar bo'limi faqat Premium'da
 create or replace function public.docs_limit() returns trigger language plpgsql security definer set search_path = '' as $$
 declare s public.shops; lim int; n int;
 begin
-  if new.col <> 'products' then return new; end if;
+  if new.col not in ('products','customers','debts') then return new; end if;
   select * into s from public.shops where id = new.shop;
   if s.id is null then return new; end if;
   if not ezp.shop_ok(s.id) then
     raise exception 'Tarifingiz faol emas. Pro yoki Premium uchun Telegram: @perdeloto' using errcode = '42501';
   end if;
+  if new.col in ('customers','debts') then
+    if not coalesce((ezp.limits() -> s.plan ->> 'debts')::boolean, false) then
+      raise exception 'Tarif: Qarzlar bo''limi faqat Premium tarifida. Telegram: @perdeloto' using errcode = 'P0001';
+    end if;
+    return new;
+  end if;
+  if tg_op <> 'INSERT' then return new; end if;
   lim := (ezp.limits() -> s.plan ->> 'products')::int;
   if lim is null then return new; end if;
   select count(*) into n from public.docs where shop = new.shop and col = 'products';
@@ -119,7 +127,7 @@ begin
   return new;
 end $$;
 drop trigger if exists docs_limit on public.docs;
-create trigger docs_limit before insert on public.docs for each row execute function public.docs_limit();
+create trigger docs_limit before insert or update on public.docs for each row execute function public.docs_limit();
 revoke all on function public.docs_fill(), public.docs_limit() from public, anon, authenticated;
 
 -- ===================== Ruxsat qoidalari (RLS) =====================

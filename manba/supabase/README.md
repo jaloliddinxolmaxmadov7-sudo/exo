@@ -34,8 +34,8 @@ Tartib muhim: avval 2-bosqichli kodni o'zingiz yoqasiz, keyin ro'yxatga qo'shasi
 
 - Har do'kon faqat **o'z** ma'lumotini ko'radi; boshqa do'kon admini sizning do'koningizga, xodimlaringizga, rasmlaringizga tega olmaydi.
 - **Free**: kirish mumkin, lekin hech narsa yozib bo'lmaydi (tovar, sotuv, xodim — hammasi bazada to'silgan). Ekranda: "Telegram @perdeloto".
-- **Pro**: 4 tagacha xodim (admin bilan), 1000 tagacha tovar. **Premium** va **butun umrlik**: cheksiz.
-  Chegaralar bitta joyda: `ezp.limits()` funksiyasi (SQL). Narxlar: `config.js` → `EZ_PLANS`.
+- **Pro** — 150 000 so'm/oy: kassa, katalog, shtrix-kod, 10 tagacha xodim, cheksiz tovar, hisobotlar. **Qarzlar bo'limi yo'q.**
+- **Premium** — 300 000 so'm/oy va **butun umrlik**: hammasi cheksiz + Qarzlar (qarzga sotish, mijozlar, muddat eslatmasi).
 - **Butun umrlik** saytda hech qayerda yozilmaydi — u do'konga "Premium · Muddatsiz" bo'lib ko'rinadi. Uni faqat siz paneldan berasiz.
 - Muddat tugasa — do'kon avtomatik Free holatiga tushadi (ma'lumotlari saqlanadi), uzaytirsangiz darhol ochiladi.
 - Sayt egasi funksiyalari (`sa_*`) faqat `ezp.superadmins` dagi va 2-bosqichli kod bilan kirgan odamga ishlaydi. Har bir amal `sa_audit` jurnaliga yoziladi.
