@@ -432,6 +432,10 @@ body.locked .app,body.locked .tabbar{visibility:hidden}
 .plan-now{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.plan-now b{font-size:18px}.plan-tag{background:var(--soft);border-radius:999px;padding:4px 12px;font-weight:600}
 body.no-qarz [data-go="qarz"],body.no-qarz #debtBtn,body.no-qarz [data-mt="Qarz"],body.no-qarz [data-sm="Qarz"],body.no-qarz [data-sdm="Qarz"]{display:none!important}
 body.no-qarz .paybtns{grid-template-columns:1fr}
+.demo-bar{position:fixed;top:0;left:0;right:0;z-index:70;min-height:46px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;padding:6px 14px;background:linear-gradient(90deg,#1f6bff,#6a3dff);color:#fff;font-size:14px;text-align:center}.demo-bar[hidden]{display:none}
+.demo-bar a,.demo-bar button{color:#fff;font-weight:700;text-decoration:none;background:rgba(255,255,255,.18);border:0;border-radius:999px;padding:6px 12px;font:inherit;font-weight:700;cursor:pointer}
+body.demo .app{padding-top:46px}body.demo #ro{display:none}body.demo .side{top:46px;height:calc(100vh - 46px)}
+@media (max-width:700px){.demo-bar .db-t{display:none}.demo-bar{gap:8px;font-size:13px}}
 .plan-tag.warn{background:color-mix(in srgb,var(--red) 18%,transparent);color:var(--red)}.lg-form .f input{font-size:18px}
 .lg-err{color:var(--red);font-weight:600;min-height:24px;margin:-2px 0 10px;font-size:15px}
 .lg-form .mlogo2{display:none}
@@ -987,6 +991,7 @@ main{padding:18px 14px 110px}
   </div>
 </div></div>
 
+<div class="demo-bar" id="demoBar" hidden role="status"><b>Sinov ko'rinishi</b><span class="db-t">Namuna do'kon — bosib ko'ring, lekin hech narsa saqlanmaydi.</span><button type="button" id="demoPlans">Tariflar</button><a href="https://t.me/perdeloto" target="_blank" rel="noopener">Pro / Premium ulash →</a></div>
 <div class="plock" id="plock" hidden role="dialog" aria-modal="true" aria-labelledby="plH">
   <div class="plock-in">
     <div class="logo"><i>e</i>ezome</div>
@@ -994,7 +999,7 @@ main{padding:18px 14px 110px}
     <p id="plP" class="mu"></p>
     <a class="btn pri big pl-tg" id="plTg" href="https://t.me/perdeloto" target="_blank" rel="noopener">Telegramda yozish: @perdeloto</a>
     <div class="pl-cards" id="plCards"></div>
-    <div class="pl-acts"><button class="btn ghost" type="button" id="plCheck">Tekshirish</button><button class="btn ghost" type="button" id="plOut">Chiqish</button></div>
+    <div class="pl-acts"><button class="btn pri" type="button" id="plClose" hidden>Ilovani ko'rishda davom etish</button><button class="btn ghost" type="button" id="plCheck">Tekshirish</button><button class="btn ghost" type="button" id="plOut">Chiqish</button></div>
     <div class="mu" id="plMsg" role="status" style="min-height:20px;margin-top:8px"></div>
   </div>
 </div>
@@ -1034,7 +1039,7 @@ function loadLocal(){try{const d=JSON.parse(localStorage.getItem(LS)||'{}');S.pr
 function saveLocal(){if(S.db)return;try{localStorage.setItem(LS,JSON.stringify({products:S.products,sales:S.sales,log:S.log,customers:S.customers,debts:S.debts,reports:S.reports,settings:S.settings}))}catch(e){toast("Brauzer xotirasi to'ldi: rasmlarni kamaytiring")}}
 function saveCart(){try{localStorage.setItem(LC,JSON.stringify(S.cart))}catch(e){}}
 try{S.cart=JSON.parse(localStorage.getItem(LC)||'[]').filter(c=>c&&typeof c.id==='string'&&c.qty>0)}catch(e){}
-async function guard(fn){if(!S.canWrite){toast("Ko'rish huquqi: saqlanmadi");return false}try{await fn();return true}catch(e){toast(e&&e.code==='quota_exceeded'?"Joy tugadi: eski sotuv yoki rasmlarni o'chiring":"Saqlanmadi: "+((e&&e.message)||'xato'));return false}}
+async function guard(fn){if(!S.canWrite){toast(S.demo?DEMO_MSG:"Ko'rish huquqi: saqlanmadi");return false}try{await fn();return true}catch(e){toast(e&&e.code==='quota_exceeded'?"Joy tugadi: eski sotuv yoki rasmlarni o'chiring":"Saqlanmadi: "+((e&&e.message)||'xato'));return false}}
 const put=(col,id,data)=>guard(async()=>{S[col][id]=data;render();if(S.db)await S.db.doc(col+'/'+id).set(data);else saveLocal()});
 const putSettings=data=>guard(async()=>{if(!isAdmin())throw{message:'faqat admin uchun'};S.settings={...DEF,...data};render();if(S.db)await S.db.doc('settings/main').set(data);else saveLocal()});
 const isAdmin=()=>S.role==='admin';
@@ -1090,7 +1095,7 @@ const cleanSz=v=>String(v||'').replace(/[|<>"'`\\]/g,'').trim().toUpperCase().sl
 function render(){
   document.body.classList.toggle('worker',S.role!=='admin');
   const n=cartQty();$$('.cb').forEach(b=>b.textContent=n||'');
-  const sy=$('#sync');sy.className='sync'+(S.db?'':' local');sy.querySelector('span').textContent=!S.ready?'Yuklanmoqda…':S.db?'Bulutda saqlanadi':'Faqat shu brauzerda';
+  const sy=$('#sync');sy.className='sync'+(S.db&&!S.demo?'':' local');sy.querySelector('span').textContent=!S.ready?'Yuklanmoqda…':S.demo?"Sinov — saqlanmaydi":S.db?'Bulutda saqlanadi':'Faqat shu brauzerda';
   $('#ro').hidden=S.canWrite;
   const st=S.settings;applyLogo();$('#hbShop').textContent=st.shop||'ezome';if(!isImg(st.logo))$('#hbAv').textContent=String(st.cashier||st.shop||'E').trim().slice(0,1).toUpperCase();
   const d=new Date();$('#hbDate').textContent=(S.user?S.user.name+(isAdmin()?' (admin)':' (ishchi)')+' · ':'')+pad(d.getDate())+'.'+pad(d.getMonth()+1)+'.'+d.getFullYear();
@@ -1842,7 +1847,7 @@ function tries(){try{return JSON.parse(localStorage.getItem(LK)||'{"n":0,"until"
 function setTries(t){try{localStorage.setItem(LK,JSON.stringify(t))}catch(e){}}
 function unlock(u){S.user={id:u.id,name:u.name,login:u.login};S.role=u.role;document.body.classList.remove('locked');last=Date.now();if(S.goHome){S.goHome=false;const h=u.role==='admin'?'bosh':'hisobotim';if(location.hash.slice(1)!==h){history.replaceState(null,'','#'+h)}}route();if(u.role==='admin'){setTimeout(checkOverdue,800);setTimeout(fillBarcodes,1200)}}
 async function fillBarcodes(){if(!isAdmin())return;for(const [id,p] of Object.entries(S.products)){const z=sizesOf(p);const need=!p.barcode||(z&&z.some(x=>!x.b));if(!need)continue;const ex=new Set();const np={...p,barcode:p.barcode||newEAN(ex)};if(z)np.sizes=z.map(x=>x.b?x:{...x,b:newEAN(ex)});if(!await put('products',id,np))break}}
-function lock(){try{localStorage.removeItem(AK)}catch(e){}$('#plock').hidden=true;clearInterval(S.planTimer);if(FB&&S.fbUser){S.fbUser=null;if(SB){sbStop();try{S.sb.auth.signOut()}catch(e){}}else{fbStop();try{firebase.auth().signOut()}catch(e){}}}S.user=null;S.role=null;S.cart=S.cart||[];document.body.classList.add('locked');$$('.ov.on').forEach(o=>close(o.id));$('#lgPin').value='';$('#lgPin').type='password';$('#lgEye').textContent='Ko\'rsatish';$('#lgErr').textContent='';setTimeout(()=>$('#lgUser').value?$('#lgPin').focus():$('#lgUser').focus(),50)}
+function lock(){try{localStorage.removeItem(AK)}catch(e){}$('#plock').hidden=true;clearInterval(S.planTimer);if(S.demo){S.demo=false;S.canWrite=true;S.db=null;document.body.classList.remove('demo');$('#demoBar').hidden=true}if(FB&&S.fbUser){S.fbUser=null;if(SB){sbStop();try{S.sb.auth.signOut()}catch(e){}}else{fbStop();try{firebase.auth().signOut()}catch(e){}}}S.user=null;S.role=null;S.cart=S.cart||[];document.body.classList.add('locked');$$('.ov.on').forEach(o=>close(o.id));$('#lgPin').value='';$('#lgPin').type='password';$('#lgEye').textContent='Ko\'rsatish';$('#lgErr').textContent='';setTimeout(()=>$('#lgUser').value?$('#lgPin').focus():$('#lgUser').focus(),50)}
 function checkSession(){if(FB)return;const a=getSession();const u=a&&users().find(x=>x.id===a.uid);if(u&&u.hash===a.h){if(!S.user||S.user.id!==u.id||S.role!==u.role||document.body.classList.contains('locked'))unlock(u)}else if(!document.body.classList.contains('locked'))lock()}
 $('#lgForm').onsubmit=async e=>{e.preventDefault();const err=$('#lgErr');
   if(FB&&S.setupMode){fbSetupSubmit();return}
@@ -1964,7 +1969,7 @@ async function sbOnUser(u){if(S.setupPending)return;const seq=S.fbSeq=(S.fbSeq||
   if(!ud||ud.disabled){S.fbUser=null;try{await S.sb.auth.signOut()}catch(e){}$('#lgErr').textContent=ud?"Bu xodim o'chirilgan — admin bilan bog'laning":"Bu login ezome xodimi emas";return}
   let inf=null;try{const r=await S.sb.rpc('my_shop_info');if(r.error)throw r.error;inf=r.data}catch(e){S.fbUser=null;$('#lgErr').textContent="Do'kon ma'lumoti olinmadi: "+sbErr(e);try{await S.sb.auth.signOut()}catch(x){}return}
   if(seq!==S.fbSeq)return;S.plan=inf||{ok:false,plan:'free'};
-  if(!S.plan.ok){S.justLogged=false;showPlanLock(ud);return}
+  if(!S.plan.ok){S.justLogged=false;if(S.plan.plan==='free'&&!S.plan.blocked){sbDemo(u,ud);return}showPlanLock(ud);return}
   S.fbUser={uid:u.id,id:u.id};S.db=sbDb;S.ready=false;S.products={};S.sales={};S.log={};S.customers={};S.debts={};S.reports={};S.users={};S.nt=null;S.wnt=null;
   unlock({id:u.id,name:ud.name,login:ud.login,role:ud.role});sbSubscribe(u.id,ud.role==='admin');rPlan();planWatch();
   if(S.justLogged){S.justLogged=false;logEv('login')}}
@@ -2003,6 +2008,43 @@ async function sbSetup(){const err=$('#lgErr'),name=$('#lgName').value.trim(),lo
   const r=await sbLogin(login,code);$('#lgBtn').disabled=false;if(r!==true){err.textContent=typeof r==='string'?r:"Do'kon ochildi, endi login va kod bilan kiring";return}
   S.setupMode=true;$('#lgSetup').click();toast("Do'kon ochildi")}
 
+/* ---------- Namuna (sinov) rejimi: Free tarif ---------- */
+const DEMO_MSG="Sinov ko'rinishi — saqlanmaydi. Ishlash uchun Pro yoki Premium: Telegram @perdeloto";
+async function sbDemo(u,ud){S.fbUser={uid:u.id,id:u.id};S.db=sbDb;S.canWrite=false;S.demo=true;S.ready=false;
+  Object.assign(S,{products:{},sales:{},log:{},customers:{},debts:{},reports:{},users:{},nt:null,wnt:null});
+  try{await sbLoadAll(u.id,true)}catch(e){}
+  if(!Object.keys(S.products).length){const d=demoData(u.id,ud);Object.assign(S,d)}
+  S.users[u.id]={...(S.users[u.id]||{}),...ud};
+  if(!S.settings||!S.settings.shop||S.settings.shop===DEF.shop)S.settings={...DEF,...(S.settings||{}),shop:(S.plan&&S.plan.name)||DEF.shop};
+  document.body.classList.add('demo');$('#demoBar').hidden=false;S.ready=true;
+  unlock({id:u.id,name:ud.name,login:ud.login,role:'admin'});rPlan();render();planWatch();
+  setTimeout(()=>toast("Bu sinov ko'rinishi: hamma narsani bosib ko'ring, lekin hech narsa saqlanmaydi"),700)}
+function demoData(uid,ud){const now=Date.now(),D=864e5,ex=new Set();let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647,pick=a=>a[Math.floor(rnd()*a.length)];
+  const P=[["Erkaklar ko'ylagi, oq",'Ko\'ylak',189000,110000,['M','L','XL'],[4,6,3]],['Jinsi shim Slim','Shim',249000,150000,['30','32','34'],[5,7,2]],["Ayollar ko'ylagi, gulli",'Ko\'ylak',279000,160000,['S','M','L'],[3,4,2]],
+    ['Sport kurtka','Kurtka',459000,290000,['M','L','XL'],[2,3,2]],['Qishki palto','Palto',899000,560000,['M','L'],[2,1]],['Futbolka Basic','Futbolka',89000,45000,['S','M','L','XL'],[8,12,10,6]],
+    ['Krossovka, oq','Poyabzal',389000,230000,['40','41','42','43'],[2,3,3,1]],['Bolalar kombinezoni','Bolalar',219000,120000,null,8],['Jun sharf','Aksessuar',79000,35000,null,14],
+    ['Charm kamar','Aksessuar',119000,60000,null,2],['Xudi Oversize','Xudi',299000,170000,['M','L','XL'],[4,5,3]],['Klassik kostyum','Kostyum',1290000,820000,['48','50','52'],[0,0,0]]];
+  const products={};P.forEach(([name,category,price,cost,sz,q],i)=>{const id='demo_p'+(i+1);const b=newEAN(ex);ex.add(b);
+    const sizes=sz?sz.map((s,k)=>{const bb=newEAN(ex);ex.add(bb);return{s,q:String(q[k]),b:bb}}):null;
+    products[id]={name,category,price,cost,qty:sizes?q.reduce((a,x)=>a+x,0):q,...(sizes?{sizes}:{}),sku:newSKU(category),barcode:b,photos:[],createdAt:now-(30-i)*D,by:ud.name}});
+  const users={[uid]:{...ud},demo_w1:{name:'Aziza',login:'aziza',role:'worker',t:now-20*D,by:ud.name},demo_w2:{name:'Jasur',login:'jasur',role:'worker',t:now-15*D,by:ud.name}};
+  const sellers=[[uid,ud.name,'admin'],['demo_w1','Aziza','worker'],['demo_w2','Jasur','worker']];
+  const customers={demo_c1:{name:'Dilshod aka',phone:'+998 90 123 45 67',t:now-12*D,by:ud.name},demo_c2:{name:'Malika opa',phone:'+998 93 765 43 21',t:now-9*D,by:'Aziza'},demo_c3:{name:'Rustam',phone:'+998 97 555 11 22',t:now-4*D,by:'Jasur'}};
+  const sales={},debts={},log={};let no=1000;const pids=Object.keys(products).filter(k=>k!=='demo_p12');
+  const qarz=[['demo_c1',9,-3],['demo_c2',5,6],['demo_c3',2,12]];
+  for(let day=6;day>=0;day--){const n=day===0?4:3+Math.floor(rnd()*3);for(let j=0;j<n;j++){
+    const d0=new Date(now-day*D);d0.setHours(10+Math.floor(rnd()*9),Math.floor(rnd()*60),0,0);let t=d0.getTime();if(t>now)t=now-(n-j)*6e5;
+    const items=[];const k=1+Math.floor(rnd()*2);for(let x=0;x<k;x++){const pid=pick(pids),p=products[pid];const it={id:pid,name:p.name,sku:p.sku,price:p.price,list:p.price,cost:p.cost,qty:1};if(p.sizes)it.size=pick(p.sizes).s;items.push(it)}
+    const total=items.reduce((a,i)=>a+i.price*i.qty,0),[sid,sn,sr]=pick(sellers),method=pick(['Naqd','Naqd','Karta','Click','Payme','Karta']);no++;
+    sales['demo_s'+no]={no,items,subtotal:total,discount:0,total,method,received:total,change:0,customer:'',seller:sn,sellerUid:sid,sellerRole:sr,createdAt:t}}}
+  qarz.forEach(([cid,ago,dueIn],i)=>{const p=products[pids[i*2+1]];const t=now-ago*D,total=p.price*(i+1);no++;const sid='demo_s'+no;
+    const it={id:pids[i*2+1],name:p.name,sku:p.sku,price:p.price,list:p.price,cost:p.cost,qty:i+1};if(p.sizes)it.size=p.sizes[0].s;
+    const due=dayKey(now+dueIn*D);sales[sid]={no,items:[it],subtotal:total,discount:0,total,method:'Qarz',received:0,change:0,customer:customers[cid].name,cid,due,seller:ud.name,sellerUid:uid,sellerRole:'admin',createdAt:t};
+    const paid=i===1?Math.round(total/3/1000)*1000:0;debts['demo_d'+(i+1)]={cid,cname:customers[cid].name,saleId:sid,no,amount:total,paid,pays:paid?[{t:t+2*D,amount:paid,method:'Naqd',by:ud.name}]:[],due,t,by:ud.name,closed:false}});
+  sellers.forEach(([sid,sn,sr],i)=>{log['demo_l'+i]={t:now-(i+1)*36e5,type:'login',by:sn,uid:sid,role:sr}});
+  return{products,users,customers,sales,debts,log,reports:{},settings:{...DEF,...(S.settings||{})}}}
+$('#demoPlans').onclick=()=>showPlanLock(S.users&&S.fbUser?S.users[S.fbUser.uid]:null);
+
 /* ---------- Tariflar ---------- */
 const PLAN_NAMES={free:'Free',pro:'Pro',premium:'Premium'};
 function planCards(cur){const P=window.EZ_PLANS||{},pr=k=>esc((P[k]&&P[k].price)||'Narxi — Telegramda');
@@ -2011,20 +2053,21 @@ function planCards(cur){const P=window.EZ_PLANS||{},pr=k=>esc((P[k]&&P[k].price)
 function showPlanLock(ud){const p=S.plan||{},exp=p.until&&new Date(p.until)<new Date();
   $('#plH').textContent=p.blocked?"Do'kon vaqtincha to'xtatilgan":p.plan==='free'?(ud&&ud.name?ud.name+', xush kelibsiz!':'Xush kelibsiz!'):'Tarif muddati tugadi';
   $('#plP').textContent=p.blocked?"Batafsil ma'lumot uchun Telegram orqali bog'laning.":p.plan==='free'?"Do'koningiz ro'yxatdan o'tdi. Ishlatishni boshlash uchun Pro yoki Premium tarifini ulang — to'lov va ulash Telegram orqali.":`${PLAN_NAMES[p.plan]||''} tarifi ${exp?new Date(p.until).toLocaleDateString('uz-UZ')+' da':''} tugadi. Ma'lumotlaringiz saqlangan — uzaytirish uchun Telegram orqali yozing.`;
-  $('#plCards').innerHTML=p.blocked?'':planCards(p.plan);$('#plMsg').textContent='';$('#plock').hidden=false}
+  $('#plCards').innerHTML=p.blocked?'':planCards(p.plan);$('#plMsg').textContent='';$('#plClose').hidden=!S.demo;if(S.demo){$('#plH').textContent='Tariflar';$('#plP').textContent="Hozir siz do'konning sinov ko'rinishidasiz: hamma bo'limni ko'rasiz, lekin hech narsa saqlanmaydi. Haqiqiy ishlash uchun Pro yoki Premium ulang — to'lov va ulash Telegram orqali."}$('#plock').hidden=false}
+$('#plClose').onclick=()=>{$('#plock').hidden=true};
 $('#plOut').onclick=async()=>{$('#plock').hidden=true;try{await S.sb.auth.signOut()}catch(e){}};
 $('#plCheck').onclick=async()=>{const m=$('#plMsg');m.textContent='Tekshirilmoqda…';try{const r=await S.sb.rpc('my_shop_info');if(r.error)throw r.error;if(r.data&&r.data.ok){m.textContent='Tarif faol ✓';location.reload()}else m.textContent="Hali ulanmagan. Telegram: @perdeloto"}catch(e){m.textContent=sbErr(e)}};
 function rPlan(){const p=S.plan;if(!p||!$('#planCard'))return;$('#planCard').hidden=S.role!=='admin';
   const days=p.until?Math.ceil((new Date(p.until)-Date.now())/864e5):null,warn=days!==null&&days<=5;
-  $('#planNow').innerHTML=`<b>${esc(PLAN_NAMES[p.plan]||p.plan)}</b><span class="plan-tag${warn?' warn':''}">${p.until?new Date(p.until).toLocaleDateString('uz-UZ')+' gacha · '+days+' kun qoldi':'Muddatsiz'}</span>`;
-  const L=p.limits||{};const lm=v=>v==null?'cheksiz':Number(v).toLocaleString('ru-RU')+' tagacha';$('#planInfo').textContent=`Xodimlar: ${lm(L.users)} · Tovarlar: ${lm(L.products)} · Qarzlar: ${L.debts?'bor':'yo\'q (Premium\'da)'}`;document.body.classList.toggle('no-qarz',!L.debts);if(!L.debts&&location.hash==='#qarz')location.hash=S.role==='admin'?'#bosh':'#hisobotim';
+  $('#planNow').innerHTML=S.demo?`<b>Free</b><span class="plan-tag warn">Sinov ko'rinishi — saqlanmaydi</span>`:`<b>${esc(PLAN_NAMES[p.plan]||p.plan)}</b><span class="plan-tag${warn?' warn':''}">${p.until?new Date(p.until).toLocaleDateString('uz-UZ')+' gacha · '+days+' kun qoldi':'Muddatsiz'}</span>`;
+  const L=p.limits||{};const lm=v=>v==null?'cheksiz':Number(v).toLocaleString('ru-RU')+' tagacha';$('#planInfo').textContent=`Xodimlar: ${lm(L.users)} · Tovarlar: ${lm(L.products)} · Qarzlar: ${L.debts?'bor':'yo\'q (Premium\'da)'}`;document.body.classList.toggle('no-qarz',!L.debts&&!S.demo);if(!L.debts&&location.hash==='#qarz')location.hash=S.role==='admin'?'#bosh':'#hisobotim';
   if(warn&&S.role==='admin'&&!S.planWarned){S.planWarned=true;setTimeout(()=>toast(`Tarif ${days} kundan keyin tugaydi — uzaytirish: Telegram @perdeloto`),1500)}}
-function planWatch(){clearInterval(S.planTimer);S.planTimer=setInterval(async()=>{if(!S.sb||!S.fbUser)return;try{const r=await S.sb.rpc('my_shop_info');if(r.error||!r.data)return;S.plan=r.data;rPlan();if(!r.data.ok){showPlanLock(S.users&&S.fbUser?S.users[S.fbUser.uid]:null)}}catch(e){}},20*60e3)}
-async function sbStore(list){const out=[],uid=S.fbUser?S.fbUser.uid:'x',bk=S.sb.storage.from('img');
+function planWatch(){clearInterval(S.planTimer);S.planTimer=setInterval(async()=>{if(S.demo&&document.hidden)return;if(!S.sb||!S.fbUser)return;try{const r=await S.sb.rpc('my_shop_info');if(r.error||!r.data)return;if(S.demo&&r.data.ok){location.reload();return}S.plan=r.data;rPlan();if(!r.data.ok&&!S.demo){showPlanLock(S.users&&S.fbUser?S.users[S.fbUser.uid]:null)}}catch(e){}},S.demo?60e3:20*60e3)}
+async function sbStore(list){if(!S.canWrite)throw{message:DEMO_MSG};const out=[],uid=S.fbUser?S.fbUser.uid:'x',bk=S.sb.storage.from('img');
   for(const p of list){if(!isImg(p)){out.push(p);continue}const path=`${uid}/${Date.now().toString(36)}${Math.random().toString(36).slice(2,8)}.jpg`;
     const {error}=await bk.upload(path,dataToBlob(p),{contentType:'image/jpeg',cacheControl:'31536000',upsert:false});if(error)throw{message:sbErr(error)};out.push(bk.getPublicUrl(path).data.publicUrl)}
   return out}
-async function sbSaveUser(id,{name,login,code,role}){
+async function sbSaveUser(id,{name,login,code,role}){if(!S.canWrite){toast(DEMO_MSG);return}
   if(!name){toast('Ismini yozing');return}if(!/^[a-z0-9_.-]{3,30}$/.test(login)){toast("Login 3–30 ta lotin harf, raqam, _ . - bo'lsin");return}
   if(users().some(u=>u.login===login&&u.id!==id)){toast('Bu login band');return}
   if((!id||code)&&code.length<(role==='admin'?6:4)){toast(role==='admin'?'Admin kodi kamida 6 belgi':'Ishchi kodi kamida 4 belgi');return}
@@ -2034,7 +2077,7 @@ async function sbSaveUser(id,{name,login,code,role}){
     if(login!==old.login||code){try{await sbFn({action:'update',uid:id,login,code})}catch(e){toast(e.message);return}}
     close('um');if(await put('users',id,{...old,name,login,role}))toast('Saqlandi');if(S.user&&id===S.user.id){S.user={...S.user,name,login};S.role=role;render()}
   }finally{$('#umSave').disabled=false}}
-async function sbImport(d,uid,st){let i=0;for(const [id,p] of Object.entries(d.products||{})){const ph=await sbStore((p.photos||[]).filter(isImg));await sbDb.doc('products/'+id).set({...p,photos:ph});st.textContent=`Tovarlar: ${++i}`}
+async function sbImport(d,uid,st){if(!S.canWrite)throw{message:DEMO_MSG};let i=0;for(const [id,p] of Object.entries(d.products||{})){const ph=await sbStore((p.photos||[]).filter(isImg));await sbDb.doc('products/'+id).set({...p,photos:ph});st.textContent=`Tovarlar: ${++i}`}
   const cols=[['sales',x=>({...x,sellerUid:x.sellerUid||uid})],['log',x=>({...x,uid:x.uid||uid})],['customers',x=>x],['debts',x=>x],['reports',x=>({...x,uid:x.uid||uid})]];
   for(const [c,fx] of cols){const ent=Object.entries(d[c]||{});for(let k=0;k<ent.length;k+=300){const {error}=await S.sb.from('docs').upsert(ent.slice(k,k+300).map(([id,x])=>({col:c,id,data:fx(x)})));if(error)throw error;st.textContent=`${c}: ${Math.min(k+300,ent.length)}/${ent.length}`}}
   const s2={...(d.settings||{})};delete s2.users;if(isImg(s2.payQr))s2.payQr=(await sbStore([s2.payQr]))[0];if(isImg(s2.logo)&&s2.logo.length>200000)s2.logo=await downsize(s2.logo,256,.85);await putSettings({...S.settings,...s2});
