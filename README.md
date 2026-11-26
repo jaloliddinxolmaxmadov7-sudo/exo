@@ -7,7 +7,7 @@ qarzlar, ishchilar hisoboti, admin «Bosh sahifa». Server: Supabase. Telefonga 
 - `manba/` — ilova manbasi, `build.py`, Supabase sxemasi va xodimlar serveri, Paynet serveri.
 
 Ko'p do'konli: har kim «Yangi do'kon ochish» orqali ro'yxatdan o'tadi (Free — hech narsa qilib bo'lmaydi),
-Pro/Premium ni sayt egasi beradi (Telegram: @perdeloto). Sozlash: `manba/supabase/README.md`.
+Pro/Premium ni sayt egasi beradi (Telegram: 1-admin @perdeloto, 2-admin @shamsiddinovichcc). Sozlash: `manba/supabase/README.md`.
 
 ## Android ilova (APK)
 
