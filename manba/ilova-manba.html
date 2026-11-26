@@ -428,6 +428,7 @@ body.locked .app,body.locked .tabbar{visibility:hidden}
 .pl-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;width:100%;margin-top:8px;text-align:left}
 .pl-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}.pl-card.on{border-color:var(--blue);box-shadow:0 0 0 2px color-mix(in srgb,var(--blue) 25%,transparent)}
 .pl-card h3{margin:0 0 2px}.pl-card .pr{font-weight:700;font-size:18px;margin:4px 0 8px}.pl-card ul{margin:0;padding-left:18px;line-height:1.6;font-size:14px}
+.tg-row{display:flex;gap:8px;flex-wrap:wrap}.tg-row a{text-decoration:none;display:inline-flex;align-items:center;justify-content:center}.pl-tgs{width:100%;max-width:640px;justify-content:center}.pl-tgs a{flex:1 1 240px}
 .pl-acts{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 .plan-now{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.plan-now b{font-size:18px}.plan-tag{background:var(--soft);border-radius:999px;padding:4px 12px;font-weight:600}
 body.no-qarz [data-go="qarz"],body.no-qarz #debtBtn,body.no-qarz [data-mt="Qarz"],body.no-qarz [data-sm="Qarz"],body.no-qarz [data-sdm="Qarz"]{display:none!important}
@@ -641,7 +642,7 @@ main{padding:18px 14px 110px}
         <h3>Tarif</h3>
         <div class="plan-now" id="planNow"></div>
         <p class="mu" id="planInfo" style="margin:8px 0 10px"></p>
-        <a class="btn ghost" href="https://t.me/perdeloto" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center">Tarifni uzaytirish: @perdeloto</a>
+        <div class="tg-row"><a class="btn ghost" href="https://t.me/perdeloto" target="_blank" rel="noopener">1-admin: @perdeloto</a><a class="btn ghost" href="https://t.me/shamsiddinovichcc" target="_blank" rel="noopener">2-admin: @shamsiddinovichcc</a></div>
       </div>
       <div class="card">
         <h3>Logotip va do'kon</h3><p class="mu">Logo menyuda, kirish oynasida va chekda chiqadi.</p>
@@ -991,13 +992,13 @@ main{padding:18px 14px 110px}
   </div>
 </div></div>
 
-<div class="demo-bar" id="demoBar" hidden role="status"><b>Sinov ko'rinishi</b><span class="db-t">Namuna do'kon — bosib ko'ring, lekin hech narsa saqlanmaydi.</span><button type="button" id="demoPlans">Tariflar</button><a href="https://t.me/perdeloto" target="_blank" rel="noopener">Pro / Premium ulash →</a></div>
+<div class="demo-bar" id="demoBar" hidden role="status"><b>Sinov ko'rinishi</b><span class="db-t">Namuna do'kon — bosib ko'ring, lekin hech narsa saqlanmaydi.</span><button type="button" id="demoPlans">Tariflar</button><button type="button" id="demoBuy">Pro / Premium ulash →</button></div>
 <div class="plock" id="plock" hidden role="dialog" aria-modal="true" aria-labelledby="plH">
   <div class="plock-in">
     <div class="logo"><i>e</i>ezome</div>
     <h2 id="plH">Tarif</h2>
     <p id="plP" class="mu"></p>
-    <a class="btn pri big pl-tg" id="plTg" href="https://t.me/perdeloto" target="_blank" rel="noopener">Telegramda yozish: @perdeloto</a>
+    <div class="tg-row pl-tgs"><a class="btn pri big pl-tg" href="https://t.me/perdeloto" target="_blank" rel="noopener">1-admin: @perdeloto</a><a class="btn pri big pl-tg" href="https://t.me/shamsiddinovichcc" target="_blank" rel="noopener">2-admin: @shamsiddinovichcc</a></div>
     <div class="pl-cards" id="plCards"></div>
     <div class="pl-acts"><button class="btn pri" type="button" id="plClose" hidden>Ilovani ko'rishda davom etish</button><button class="btn ghost" type="button" id="plCheck">Tekshirish</button><button class="btn ghost" type="button" id="plOut">Chiqish</button></div>
     <div class="mu" id="plMsg" role="status" style="min-height:20px;margin-top:8px"></div>
@@ -2009,7 +2010,7 @@ async function sbSetup(){const err=$('#lgErr'),name=$('#lgName').value.trim(),lo
   S.setupMode=true;$('#lgSetup').click();toast("Do'kon ochildi")}
 
 /* ---------- Namuna (sinov) rejimi: Free tarif ---------- */
-const DEMO_MSG="Sinov ko'rinishi — saqlanmaydi. Ishlash uchun Pro yoki Premium: Telegram @perdeloto";
+const DEMO_MSG="Sinov ko'rinishi — saqlanmaydi. Ishlash uchun Pro yoki Premium: Telegram @perdeloto yoki @shamsiddinovichcc";
 async function sbDemo(u,ud){S.fbUser={uid:u.id,id:u.id};S.db=sbDb;S.canWrite=false;S.demo=true;S.ready=false;
   Object.assign(S,{products:{},sales:{},log:{},customers:{},debts:{},reports:{},users:{},nt:null,wnt:null});
   try{await sbLoadAll(u.id,true)}catch(e){}
@@ -2043,7 +2044,7 @@ function demoData(uid,ud){const now=Date.now(),D=864e5,ex=new Set();let seed=7;c
     const paid=i===1?Math.round(total/3/1000)*1000:0;debts['demo_d'+(i+1)]={cid,cname:customers[cid].name,saleId:sid,no,amount:total,paid,pays:paid?[{t:t+2*D,amount:paid,method:'Naqd',by:ud.name}]:[],due,t,by:ud.name,closed:false}});
   sellers.forEach(([sid,sn,sr],i)=>{log['demo_l'+i]={t:now-(i+1)*36e5,type:'login',by:sn,uid:sid,role:sr}});
   return{products,users,customers,sales,debts,log,reports:{},settings:{...DEF,...(S.settings||{})}}}
-$('#demoPlans').onclick=()=>showPlanLock(S.users&&S.fbUser?S.users[S.fbUser.uid]:null);
+$('#demoPlans').onclick=$('#demoBuy').onclick=()=>showPlanLock(S.users&&S.fbUser?S.users[S.fbUser.uid]:null);
 
 /* ---------- Tariflar ---------- */
 const PLAN_NAMES={free:'Free',pro:'Pro',premium:'Premium'};
@@ -2056,12 +2057,12 @@ function showPlanLock(ud){const p=S.plan||{},exp=p.until&&new Date(p.until)<new 
   $('#plCards').innerHTML=p.blocked?'':planCards(p.plan);$('#plMsg').textContent='';$('#plClose').hidden=!S.demo;if(S.demo){$('#plH').textContent='Tariflar';$('#plP').textContent="Hozir siz do'konning sinov ko'rinishidasiz: hamma bo'limni ko'rasiz, lekin hech narsa saqlanmaydi. Haqiqiy ishlash uchun Pro yoki Premium ulang — to'lov va ulash Telegram orqali."}$('#plock').hidden=false}
 $('#plClose').onclick=()=>{$('#plock').hidden=true};
 $('#plOut').onclick=async()=>{$('#plock').hidden=true;try{await S.sb.auth.signOut()}catch(e){}};
-$('#plCheck').onclick=async()=>{const m=$('#plMsg');m.textContent='Tekshirilmoqda…';try{const r=await S.sb.rpc('my_shop_info');if(r.error)throw r.error;if(r.data&&r.data.ok){m.textContent='Tarif faol ✓';location.reload()}else m.textContent="Hali ulanmagan. Telegram: @perdeloto"}catch(e){m.textContent=sbErr(e)}};
+$('#plCheck').onclick=async()=>{const m=$('#plMsg');m.textContent='Tekshirilmoqda…';try{const r=await S.sb.rpc('my_shop_info');if(r.error)throw r.error;if(r.data&&r.data.ok){m.textContent='Tarif faol ✓';location.reload()}else m.textContent="Hali ulanmagan. Telegram: @perdeloto yoki @shamsiddinovichcc"}catch(e){m.textContent=sbErr(e)}};
 function rPlan(){const p=S.plan;if(!p||!$('#planCard'))return;$('#planCard').hidden=S.role!=='admin';
   const days=p.until?Math.ceil((new Date(p.until)-Date.now())/864e5):null,warn=days!==null&&days<=5;
   $('#planNow').innerHTML=S.demo?`<b>Free</b><span class="plan-tag warn">Sinov ko'rinishi — saqlanmaydi</span>`:`<b>${esc(PLAN_NAMES[p.plan]||p.plan)}</b><span class="plan-tag${warn?' warn':''}">${p.until?new Date(p.until).toLocaleDateString('uz-UZ')+' gacha · '+days+' kun qoldi':'Muddatsiz'}</span>`;
   const L=p.limits||{};const lm=v=>v==null?'cheksiz':Number(v).toLocaleString('ru-RU')+' tagacha';$('#planInfo').textContent=`Xodimlar: ${lm(L.users)} · Tovarlar: ${lm(L.products)} · Qarzlar: ${L.debts?'bor':'yo\'q (Premium\'da)'}`;document.body.classList.toggle('no-qarz',!L.debts&&!S.demo);if(!L.debts&&location.hash==='#qarz')location.hash=S.role==='admin'?'#bosh':'#hisobotim';
-  if(warn&&S.role==='admin'&&!S.planWarned){S.planWarned=true;setTimeout(()=>toast(`Tarif ${days} kundan keyin tugaydi — uzaytirish: Telegram @perdeloto`),1500)}}
+  if(warn&&S.role==='admin'&&!S.planWarned){S.planWarned=true;setTimeout(()=>toast(`Tarif ${days} kundan keyin tugaydi — uzaytirish: Telegram @perdeloto yoki @shamsiddinovichcc`),1500)}}
 function planWatch(){clearInterval(S.planTimer);S.planTimer=setInterval(async()=>{if(S.demo&&document.hidden)return;if(!S.sb||!S.fbUser)return;try{const r=await S.sb.rpc('my_shop_info');if(r.error||!r.data)return;if(S.demo&&r.data.ok){location.reload();return}S.plan=r.data;rPlan();if(!r.data.ok&&!S.demo){showPlanLock(S.users&&S.fbUser?S.users[S.fbUser.uid]:null)}}catch(e){}},S.demo?60e3:20*60e3)}
 async function sbStore(list){if(!S.canWrite)throw{message:DEMO_MSG};const out=[],uid=S.fbUser?S.fbUser.uid:'x',bk=S.sb.storage.from('img');
   for(const p of list){if(!isImg(p)){out.push(p);continue}const path=`${uid}/${Date.now().toString(36)}${Math.random().toString(36).slice(2,8)}.jpg`;

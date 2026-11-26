@@ -109,11 +109,11 @@ begin
   select * into s from public.shops where id = new.shop;
   if s.id is null then return new; end if;
   if not ezp.shop_ok(s.id) then
-    raise exception 'Tarifingiz faol emas. Pro yoki Premium uchun Telegram: @perdeloto' using errcode = '42501';
+    raise exception 'Tarifingiz faol emas. Pro yoki Premium uchun Telegram: @perdeloto yoki @shamsiddinovichcc' using errcode = '42501';
   end if;
   if new.col in ('customers','debts') then
     if not coalesce((ezp.limits() -> s.plan ->> 'debts')::boolean, false) then
-      raise exception 'Tarif: Qarzlar bo''limi faqat Premium tarifida. Telegram: @perdeloto' using errcode = 'P0001';
+      raise exception 'Tarif: Qarzlar bo''limi faqat Premium tarifida. Telegram: @perdeloto yoki @shamsiddinovichcc' using errcode = 'P0001';
     end if;
     return new;
   end if;
@@ -122,7 +122,7 @@ begin
   if lim is null then return new; end if;
   select count(*) into n from public.docs where shop = new.shop and col = 'products';
   if n >= lim then
-    raise exception 'Tarif chegarasi: % ta tovar. Premium uchun Telegram: @perdeloto', lim using errcode = 'P0001';
+    raise exception 'Tarif chegarasi: % ta tovar. Premium uchun Telegram: @perdeloto yoki @shamsiddinovichcc', lim using errcode = 'P0001';
   end if;
   return new;
 end $$;

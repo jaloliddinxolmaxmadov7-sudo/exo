@@ -34,7 +34,7 @@ Tartib muhim: avval 2-bosqichli kodni o'zingiz yoqasiz, keyin ro'yxatga qo'shasi
 
 - Har do'kon faqat **o'z** ma'lumotini ko'radi; boshqa do'kon admini sizning do'koningizga, xodimlaringizga, rasmlaringizga tega olmaydi.
 - **Free** — sinov ko'rinishi: ilova Premium'dek to'liq ochiladi, ichida namuna tovarlar, sotuvlar, xodimlar va qarzlar bor (bazaga yozilmaydi, faqat ekranda).
-  Hech narsa saqlanmaydi: ilovada ham, bazada ham to'silgan. Tepada "Sinov ko'rinishi" paneli va Telegram @perdeloto havolasi turadi.
+  Hech narsa saqlanmaydi: ilovada ham, bazada ham to'silgan. Tepada "Sinov ko'rinishi" paneli va Telegram havolalari (1-admin @perdeloto, 2-admin @shamsiddinovichcc) turadi.
   Pro/Premium berilgach, 1 daqiqa ichida o'zi haqiqiy (bo'sh) do'konga o'tadi.
 - **Pro** — 150 000 so'm/oy: kassa, katalog, shtrix-kod, 10 tagacha xodim, cheksiz tovar, hisobotlar. **Qarzlar bo'limi yo'q.**
 - **Premium** — 300 000 so'm/oy va **butun umrlik**: hammasi cheksiz + Qarzlar (qarzga sotish, mijozlar, muddat eslatmasi).

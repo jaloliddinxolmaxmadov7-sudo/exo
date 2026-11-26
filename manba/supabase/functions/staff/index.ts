@@ -15,7 +15,7 @@ const json = (body: unknown, status = 200) =>
 const email = (l: string) => String(l).toLowerCase() + '@ezome.app';
 const pass = (c: string) => 'ezome-' + String(c);
 const LOGIN = /^[a-z0-9_.-]{3,30}$/;
-const TG = '@perdeloto';
+const TG = '@perdeloto yoki @shamsiddinovichcc';
 const str = (v: unknown, n: number) => String(v ?? '').trim().slice(0, n);
 const PLANS = ['free', 'pro', 'premium', 'lifetime'];
 
